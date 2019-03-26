@@ -1,0 +1,86 @@
+package xyz.thekoc.sysalert.rule;
+
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.SearchHit;
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import xyz.thekoc.sysalert.MatchedEvent;
+import xyz.thekoc.sysalert.MonitoredEventType;
+import xyz.thekoc.sysalert.MonitoredEventTypes;
+
+import java.util.ArrayList;
+
+public abstract class RuleType {
+    protected String index;
+    MonitoredEventTypes monitoredEventTypes;
+    private String timestampField = "@timestamp";
+    private Interval lastQueryInterval = null;
+    private String timePattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+    private DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern(timePattern);
+
+    RuleType(String index, MonitoredEventTypes monitoredEventTypes) {
+        this.index = index;
+        this.monitoredEventTypes = monitoredEventTypes;
+    }
+
+    RuleType(String index, QueryBuilder filter) {
+        this.index = index;
+        monitoredEventTypes = new MonitoredEventTypes();
+        monitoredEventTypes.add(new MonitoredEventType(filter));
+    }
+
+    RuleType(String index, QueryBuilder filter, int threshold) {
+        this.index = index;
+        monitoredEventTypes = new MonitoredEventTypes();
+        monitoredEventTypes.add(new MonitoredEventType(filter, threshold));
+    }
+
+    public abstract void addMatchedEvents(ArrayList<MatchedEvent> matchedEvents);
+
+
+    public void addFilterToAll(QueryBuilder filter) {
+        monitoredEventTypes.addFilterToAll(filter);
+    }
+
+    public String getIndex() {
+        return index;
+    }
+
+    public DateTime getDate(SearchHit hit) {
+        String timestamp = (String) hit.getSourceAsMap().get(timestampField);
+        return dateTimeFormatter.parseDateTime(timestamp);
+    }
+
+    public String getTimestampField() {
+        return timestampField;
+    }
+
+    public Interval getLastQueryInterval() {
+        return lastQueryInterval;
+    }
+
+    public void setLastQueryInterval(Interval lastQueryInterval) {
+        this.lastQueryInterval = lastQueryInterval;
+    }
+
+    public DateTimeFormatter getDateTimeFormatter() {
+        return dateTimeFormatter;
+    }
+
+    public String getTimePattern() {
+        return timePattern;
+    }
+
+    public void setTimePattern(String timePattern) {
+        this.timePattern = timePattern;
+        dateTimeFormatter = DateTimeFormat.forPattern(timePattern);
+    }
+
+    public MonitoredEventTypes getMonitoredEventTypes() {
+        return monitoredEventTypes;
+    }
+}
+
