@@ -7,18 +7,18 @@ import xyz.thekoc.sysalert.MatchedEvent;
 import xyz.thekoc.sysalert.MonitoredEventType;
 import xyz.thekoc.sysalert.MonitoredEventTypes;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 public class CombinationRule extends RuleType {
-    private LinkedList<MatchedEvent> matchedEvents;
+    private Queue<MatchedEvent> matchedEvents = new LinkedList<>();
     private Period timeWindow;
     private Map<MonitoredEventType, Integer> windowEventCounter = new Hashtable<>();
 
-
-    public CombinationRule(String index, MonitoredEventTypes monitoredEventTypes, Period timeWindow) {
+    public CombinationRule(String index, Period timeWindow, MonitoredEventType... monitoredEventTypes) {
+        super(index, new MonitoredEventTypes(Arrays.asList(monitoredEventTypes)));
+        this.timeWindow = timeWindow;
+    }
+    public CombinationRule(String index, Period timeWindow, MonitoredEventTypes monitoredEventTypes) {
         super(index, monitoredEventTypes);
         this.timeWindow = timeWindow;
     }

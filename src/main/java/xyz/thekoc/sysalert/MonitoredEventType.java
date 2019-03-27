@@ -10,10 +10,6 @@ public class MonitoredEventType {
         this.threshold = threshold;
     }
 
-    public MonitoredEventType(QueryBuilder filter) {
-        this.filter = filter;
-    }
-
     public boolean isSameType(MonitoredEventType type) {
         return this.filter.equals(type.filter);
     }

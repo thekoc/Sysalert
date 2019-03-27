@@ -1,21 +1,19 @@
 package xyz.thekoc.sysalert.rule;
 
 import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.search.SearchHit;
-import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.joda.time.Period;
 import xyz.thekoc.sysalert.MatchedEvent;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Map;
+import java.util.Queue;
 
 public class FrequencyRule extends RuleType {
-    private LinkedList<MatchedEvent> matchedEvents = new LinkedList<>();
-    private Period timeWindow = Period.minutes(1);
+    private Queue<MatchedEvent> matchedEvents = new LinkedList<>();
+    private Period timeWindow;
     private int threshold;
-    public FrequencyRule(String index, QueryBuilder filter, int threshold, Period timeWindow) {
+    public FrequencyRule(String index, Period timeWindow, QueryBuilder filter, int threshold)  {
         super(index, filter, threshold);
         this.threshold = threshold;
         this.timeWindow = timeWindow;

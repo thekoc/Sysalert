@@ -14,6 +14,7 @@ import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
+import xyz.thekoc.sysalert.rule.CombinationRule;
 import xyz.thekoc.sysalert.rule.FrequencyRule;
 import xyz.thekoc.sysalert.rule.SysmonFrequencyRule;
 
@@ -35,6 +36,8 @@ public class SysalertTest {
         QueryBuilder eventQuery = QueryBuilders.termQuery("event_id", 3);
         FrequencyRule frequencyRule = new SysmonFrequencyRule("sysalert-test", eventQuery, 200, Period.minutes(1));
         sysalert.addRule(frequencyRule);
+
+        CombinationRule combinationRule = new CombinationRule("sysalert-test", Period.minutes(1), new MonitoredEventType(eventQuery, 1));
         (new Thread(new Runnable() {
             @Override
             public void run() {

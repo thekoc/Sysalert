@@ -6,7 +6,7 @@ import org.joda.time.Period;
 
 public class SysmonFrequencyRule extends FrequencyRule {
     public SysmonFrequencyRule(String index, QueryBuilder filter, int threshold, Period timewindow) {
-        super(index, filter, threshold, timewindow);
+        super(index, timewindow, filter, threshold);
         SysmonRuleBuilder.addSysmonFilter(this);
     }
 }
