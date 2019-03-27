@@ -15,7 +15,7 @@ public class SquenceRule extends RuleType {
     private Queue<MatchedEvent> matchedEvents = new LinkedList<>();
     private Period timeWindow;
 
-    SquenceRule(String index, Period timeWindow, QueryBuilder... filters) {
+    public SquenceRule(String index, Period timeWindow, QueryBuilder... filters) {
         super(index, new MonitoredEventTypes(filters));
         this.timeWindow = timeWindow;
     }
@@ -27,7 +27,7 @@ public class SquenceRule extends RuleType {
             while (shouldRemoveHead(event)) {
                 this.matchedEvents.poll();
             }
-            if (exists(matchedEvents, monitoredEventTypes)) {
+            if (exists(this.matchedEvents, monitoredEventTypes)) {
                 System.out.println("Alerting!");
             }
         }
@@ -47,7 +47,7 @@ public class SquenceRule extends RuleType {
         }
     }
 
-    public boolean exists(List<MatchedEvent> matchedEvents, MonitoredEventTypes monitoredEventTypes) {
+    public boolean exists(Queue<MatchedEvent> matchedEvents, MonitoredEventTypes monitoredEventTypes) {
         int cursor = 0;
         for (MatchedEvent matchedEvent: matchedEvents) {
             if (cursor < monitoredEventTypes.size() && matchedEvent.isEventType(monitoredEventTypes.get(cursor))) {
