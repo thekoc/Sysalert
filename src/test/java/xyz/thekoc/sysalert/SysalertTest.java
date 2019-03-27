@@ -28,7 +28,7 @@ public class SysalertTest {
         CombinationRule combinationRule = new CombinationRule("sysalert-test", Period.minutes(1),
                 new MonitoredEventType(event3, 1), new MonitoredEventType(event4, 1));
 //        sysalert.addRule(combinationRule);
-        (new Thread(() -> new PostAgentTest().postData())).start();
+        new Thread(() -> new PostAgentTest().postData()).start();
 
         sysalert.start();
     }
