@@ -33,17 +33,14 @@ public class SysalertTest {
     @org.junit.Test
     public void main() {
         Sysalert sysalert = new Sysalert("localhost", 9200, "http");
-        QueryBuilder eventQuery = QueryBuilders.termQuery("event_id", 3);
-        FrequencyRule frequencyRule = new SysmonFrequencyRule("sysalert-test", eventQuery, 200, Period.minutes(1));
+        QueryBuilder event3 = QueryBuilders.termQuery("event_id", 3);
+        QueryBuilder event4 = QueryBuilders.termQuery("event_id", 4);
+        FrequencyRule frequencyRule = new SysmonFrequencyRule("sysalert-test", Period.minutes(1), event3, 200);
         sysalert.addRule(frequencyRule);
 
-        CombinationRule combinationRule = new CombinationRule("sysalert-test", Period.minutes(1), new MonitoredEventType(eventQuery, 1));
-        (new Thread(new Runnable() {
-            @Override
-            public void run() {
-                new PostAgentTest().postData();
-            }
-        })).start();
+        CombinationRule combinationRule = new CombinationRule("sysalert-test", Period.minutes(1),
+                new MonitoredEventType(event3, 1), new MonitoredEventType(event4, 1));
+        (new Thread(() -> new PostAgentTest().postData())).start();
         sysalert.start();
     }
 }

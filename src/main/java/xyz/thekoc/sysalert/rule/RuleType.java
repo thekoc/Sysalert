@@ -29,7 +29,7 @@ public abstract class RuleType {
     RuleType(String index, QueryBuilder filter) {
         this.index = index;
         monitoredEventTypes = new MonitoredEventTypes();
-        monitoredEventTypes.add(new MonitoredEventType(filter));
+        monitoredEventTypes.add(new MonitoredEventType(filter, 0));
     }
 
     RuleType(String index, QueryBuilder filter, int threshold) {
