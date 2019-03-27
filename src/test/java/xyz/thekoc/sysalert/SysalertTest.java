@@ -1,15 +1,5 @@
 package xyz.thekoc.sysalert;
 
-import org.apache.http.HttpHost;
-import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
-import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
-import org.elasticsearch.action.ingest.PutPipelineRequest;
-import org.elasticsearch.action.support.master.AcknowledgedResponse;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestClient;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.common.bytes.BytesArray;
-import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.joda.time.DateTime;
@@ -18,10 +8,6 @@ import xyz.thekoc.sysalert.rule.CombinationRule;
 import xyz.thekoc.sysalert.rule.FrequencyRule;
 import xyz.thekoc.sysalert.rule.SysmonFrequencyRule;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-
-import static org.junit.Assert.*;
 
 public class SysalertTest {
 
@@ -40,7 +26,9 @@ public class SysalertTest {
 
         CombinationRule combinationRule = new CombinationRule("sysalert-test", Period.minutes(1),
                 new MonitoredEventType(event3, 1), new MonitoredEventType(event4, 1));
+        sysalert.addRule(combinationRule);
         (new Thread(() -> new PostAgentTest().postData())).start();
+
         sysalert.start();
     }
 }

@@ -29,12 +29,10 @@ public class FrequencyRule extends RuleType {
                     new Duration(this.matchedEvents.peek().getDate(), event.getDate()).isLongerThan(
                             timeWindow.toStandardDuration())) {
                 this.matchedEvents.poll();
-                System.out.println("polling");
-
             }
 
             if (this.matchedEvents.size() > threshold) {
-//                System.out.println("Alerting!");
+//                System.out.println("Frequency Alerting!");
             }
         }
     }
