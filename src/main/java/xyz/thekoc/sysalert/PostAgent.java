@@ -10,7 +10,6 @@ import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 
 import java.io.IOException;
-import java.util.Date;
 
 public class PostAgent {
     private RestHighLevelClient client;

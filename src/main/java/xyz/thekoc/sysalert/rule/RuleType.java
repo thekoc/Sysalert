@@ -5,6 +5,7 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
+import org.joda.time.Period;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import xyz.thekoc.sysalert.MatchedEvent;
@@ -17,6 +18,7 @@ public abstract class RuleType {
     protected String index;
     MonitoredEventTypes monitoredEventTypes;
     private String timestampField = "@timestamp";
+    private Period queryDelay = Period.seconds(1);
     private Interval lastQueryInterval = null;
     private String timePattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     private DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern(timePattern);
@@ -27,14 +29,11 @@ public abstract class RuleType {
     }
 
     RuleType(String index, QueryBuilder filter) {
-        this.index = index;
-        monitoredEventTypes = new MonitoredEventTypes();
-        monitoredEventTypes.add(new MonitoredEventType(filter, 0));
+        this(index, filter, 0);
     }
 
     RuleType(String index, QueryBuilder filter, int threshold) {
-        this.index = index;
-        monitoredEventTypes = new MonitoredEventTypes();
+        this(index, new MonitoredEventTypes());
         monitoredEventTypes.add(new MonitoredEventType(filter, threshold));
     }
 
@@ -81,6 +80,14 @@ public abstract class RuleType {
 
     public MonitoredEventTypes getMonitoredEventTypes() {
         return monitoredEventTypes;
+    }
+
+    public Period getQueryDelay() {
+        return queryDelay;
+    }
+
+    public void setQueryDelay(Period queryDelay) {
+        this.queryDelay = queryDelay;
     }
 }
 

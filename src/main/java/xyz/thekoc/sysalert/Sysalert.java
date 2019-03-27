@@ -11,7 +11,6 @@ import org.joda.time.Interval;
 import xyz.thekoc.sysalert.rule.RuleType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Sysalert {
     private boolean running = true;
@@ -47,10 +46,11 @@ public class Sysalert {
         for (RuleType rule: rules) {
             Interval queryInterval;
             if (rule.getLastQueryInterval() == null) {
-                queryInterval = new Interval(startDateTime, DateTime.now());
+                queryInterval = new Interval(startDateTime.minus(rule.getQueryDelay()), DateTime.now().minus(rule.getQueryDelay()));
             } else {
-                queryInterval = new Interval(rule.getLastQueryInterval().getEnd(), DateTime.now());
+                queryInterval = new Interval(rule.getLastQueryInterval().getEnd(), DateTime.now().minus(rule.getQueryDelay()));
             }
+
 
             for (MonitoredEventType eventType: rule.getMonitoredEventTypes()) {
                 runQuery(rule, eventType, queryInterval);
@@ -60,7 +60,7 @@ public class Sysalert {
     }
 
     private void runQuery(RuleType rule, MonitoredEventType eventType, Interval queryInterval) {
-
+        // TODO: Fix the problem where some event may not be queried
         String startTime = queryInterval.getStart().toString(rule.getDateTimeFormatter());
         String endTime = queryInterval.getEnd().toString(rule.getDateTimeFormatter());
 
@@ -69,6 +69,8 @@ public class Sysalert {
         QueryBuilder finalQuery = QueryBuilders.boolQuery().filter(eventType.getFilter()).filter(rangeQueryBuilder);
         FieldSortBuilder sort = new FieldSortBuilder(rule.getTimestampField()).order(SortOrder.ASC);
         SearchResponse response = searchAgent.search(rule.getIndex(), finalQuery, sort);
+//        System.out.println("real total heat: " + response.getHits().totalHits);
+//        System.out.println(rangeQueryBuilder);
         ArrayList<MatchedEvent> matchedEvents = new ArrayList<>();
         for (SearchHit hit: response.getHits()) {
             matchedEvents.add(new MatchedEvent(hit, eventType, rule.getDate(hit)));
