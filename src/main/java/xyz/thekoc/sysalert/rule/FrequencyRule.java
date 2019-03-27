@@ -5,8 +5,8 @@ import org.joda.time.Duration;
 import org.joda.time.Period;
 import xyz.thekoc.sysalert.MatchedEvent;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 public class FrequencyRule extends RuleType {
@@ -21,7 +21,7 @@ public class FrequencyRule extends RuleType {
 
 
     @Override
-    public void addMatchedEvents(ArrayList<MatchedEvent> matchedEvents) {
+    public void addMatchedEvents(List<MatchedEvent> matchedEvents) {
         System.out.println("hit num: ".concat(String.valueOf(matchedEvents.size())));
         for (MatchedEvent event: matchedEvents) {
             this.matchedEvents.add(event);

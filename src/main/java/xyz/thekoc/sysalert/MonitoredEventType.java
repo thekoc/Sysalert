@@ -5,6 +5,11 @@ import org.elasticsearch.index.query.QueryBuilder;
 public class MonitoredEventType {
     private QueryBuilder filter;
     private int threshold;
+
+    public MonitoredEventType(QueryBuilder filter) {
+        this(filter, 0);
+    }
+
     public MonitoredEventType(QueryBuilder filter, int threshold) {
         this.filter = filter;
         this.threshold = threshold;

@@ -1,7 +1,6 @@
 package xyz.thekoc.sysalert.rule;
 
 import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
@@ -12,7 +11,7 @@ import xyz.thekoc.sysalert.MatchedEvent;
 import xyz.thekoc.sysalert.MonitoredEventType;
 import xyz.thekoc.sysalert.MonitoredEventTypes;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public abstract class RuleType {
     protected String index;
@@ -37,7 +36,7 @@ public abstract class RuleType {
         monitoredEventTypes.add(new MonitoredEventType(filter, threshold));
     }
 
-    public abstract void addMatchedEvents(ArrayList<MatchedEvent> matchedEvents);
+    public abstract void addMatchedEvents(List<MatchedEvent> matchedEvents);
 
 
     public void addFilterToAll(QueryBuilder filter) {

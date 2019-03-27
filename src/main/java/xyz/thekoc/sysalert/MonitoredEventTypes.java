@@ -4,8 +4,10 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MonitoredEventTypes implements Iterable<MonitoredEventType> {
     private ArrayList<MonitoredEventType> monitoredEventTypes;
@@ -16,6 +18,10 @@ public class MonitoredEventTypes implements Iterable<MonitoredEventType> {
 
     public MonitoredEventTypes(List<MonitoredEventType> monitoredEventTypes) {
         this.monitoredEventTypes = new ArrayList<>(monitoredEventTypes);
+    }
+
+    public MonitoredEventTypes(QueryBuilder... filters) {
+        this(Arrays.stream(filters).map(MonitoredEventType::new).collect(Collectors.toList()));
     }
 
     public void addFilterToAll(QueryBuilder filter) {
@@ -35,5 +41,17 @@ public class MonitoredEventTypes implements Iterable<MonitoredEventType> {
     @Override
     public Iterator<MonitoredEventType> iterator() {
         return monitoredEventTypes.listIterator();
+    }
+
+    public MonitoredEventType get(int index) {
+        return monitoredEventTypes.get(index);
+    }
+
+    public int size() {
+        return monitoredEventTypes.size();
+    }
+
+    public boolean contains(MonitoredEventType eventType) {
+        return monitoredEventTypes.contains(eventType);
     }
 }

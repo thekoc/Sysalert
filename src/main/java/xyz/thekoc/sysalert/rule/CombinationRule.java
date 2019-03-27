@@ -27,7 +27,7 @@ public class CombinationRule extends RuleType {
     }
 
     @Override
-    public void addMatchedEvents(ArrayList<MatchedEvent> matchedEvents) {
+    public void addMatchedEvents(List<MatchedEvent> matchedEvents) {
         for (MatchedEvent event: matchedEvents) {
             this.matchedEvents.add(event);
             Integer previousCount = windowEventCounter.get(event.getMonitoredEventType());
