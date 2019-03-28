@@ -10,11 +10,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-public class SquenceRule extends RuleType {
+public class SequenceRule extends RuleType {
     private Queue<MatchedEvent> matchedEvents = new LinkedList<>();
     private Period timeWindow;
 
-    public SquenceRule(String index, Period timeWindow, QueryBuilder... filters) {
+    public SequenceRule(String index, Period timeWindow, QueryBuilder... filters) {
         super(index, new MonitoredEventTypes(filters));
         this.timeWindow = timeWindow;
     }

@@ -6,7 +6,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Period;
 import xyz.thekoc.sysalert.rule.CombinationRule;
 import xyz.thekoc.sysalert.rule.FrequencyRule;
-import xyz.thekoc.sysalert.rule.SquenceRule;
+import xyz.thekoc.sysalert.rule.SequenceRule;
 import xyz.thekoc.sysalert.rule.SysmonFrequencyRule;
 
 
@@ -32,8 +32,8 @@ public class SysalertTest {
 //        sysalert.addRule(combinationRule);
 
 
-        SquenceRule squenceRule = new SquenceRule("sysalert-test", Period.minutes(15), event3, event4, event5);
-        sysalert.addRule(squenceRule);
+        SequenceRule sequenceRule = new SequenceRule("sysalert-test", Period.minutes(15), event3, event4, event5);
+        sysalert.addRule(sequenceRule);
 //        new Thread(() -> new PostAgentTest().postData()).start();
 
         sysalert.start();
