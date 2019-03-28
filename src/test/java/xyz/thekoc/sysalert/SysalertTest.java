@@ -2,23 +2,27 @@ package xyz.thekoc.sysalert;
 
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.joda.time.DateTime;
 import org.joda.time.Period;
+import xyz.thekoc.sysalert.conifg.Config;
 import xyz.thekoc.sysalert.rule.CombinationRule;
 import xyz.thekoc.sysalert.rule.FrequencyRule;
 import xyz.thekoc.sysalert.rule.SequenceRule;
 import xyz.thekoc.sysalert.rule.SysmonFrequencyRule;
+
+import java.io.FileNotFoundException;
 
 
 public class SysalertTest {
 
     @org.junit.Test
     public void start() {
-        System.out.println(DateTime.now().toString("yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
+
     }
 
     @org.junit.Test
     public void main() {
+
+
         Sysalert sysalert = new Sysalert("localhost", 9200, "http");
         QueryBuilder event3 = QueryBuilders.termQuery("event_id", 3);
         QueryBuilder event4 = QueryBuilders.termQuery("event_id", 4);

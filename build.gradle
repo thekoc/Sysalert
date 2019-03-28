@@ -13,5 +13,6 @@ repositories {
 
 dependencies {
     compile 'org.elasticsearch.client:elasticsearch-rest-high-level-client:6.6.2'
+    compile 'com.esotericsoftware.yamlbeans:yamlbeans:1.06'
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
