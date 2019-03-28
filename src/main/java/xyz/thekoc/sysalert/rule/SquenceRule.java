@@ -4,7 +4,6 @@ import org.elasticsearch.index.query.QueryBuilder;
 import org.joda.time.Duration;
 import org.joda.time.Period;
 import xyz.thekoc.sysalert.MatchedEvent;
-import xyz.thekoc.sysalert.MonitoredEventType;
 import xyz.thekoc.sysalert.MonitoredEventTypes;
 
 import java.util.LinkedList;

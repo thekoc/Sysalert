@@ -46,7 +46,7 @@ public class PostAgentTest {
                             "message", "trying out Elasticsearch",
                             "source_name", "Microsoft-Windows-Sysmon");
                 }
-                System.out.println("totalPosted: " + totalPosted);
+//                System.out.println("totalPosted: " + totalPosted);
                 Thread.sleep(1000);
             }
         } catch (IOException | InterruptedException e) {
