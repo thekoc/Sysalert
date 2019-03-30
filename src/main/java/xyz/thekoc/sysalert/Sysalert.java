@@ -60,7 +60,6 @@ public class Sysalert {
     }
 
     private void runQuery(RuleType rule, MonitoredEventType eventType, Interval queryInterval) {
-        // TODO: Fix the problem where some event may not be queried
         String startTime = queryInterval.getStart().toString(rule.getDateTimeFormatter());
         String endTime = queryInterval.getEnd().toString(rule.getDateTimeFormatter());
 

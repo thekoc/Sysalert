@@ -1,0 +1,7 @@
+name: test frequency rule
+type: sysmon_frequency_rule
+timewindow:
+  minutes: 10
+filter:
+  - term:
+      event_id: 3
