@@ -1,5 +1,6 @@
 package xyz.thekoc.sysalert.alert;
 
+import org.joda.time.DateTime;
 import xyz.thekoc.sysalert.MatchedEvent;
 import xyz.thekoc.sysalert.PostAgent;
 import xyz.thekoc.sysalert.conifg.Config;
@@ -13,6 +14,6 @@ public class ElasticsearchAlerter extends Alerter{
 
     @Override
     void alert(List<MatchedEvent> matchedEvents) throws IOException {
-        postAgent.postData("sysalert-alert", "_doc", "abcdefg");
+        postAgent.postData("sysalert-alert", "_doc", "message", "abcdefg", "@timestamp", DateTime.now());
     }
 }

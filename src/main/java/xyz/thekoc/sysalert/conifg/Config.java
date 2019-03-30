@@ -57,5 +57,7 @@ public class Config {
         return configBean.scheme;
     }
 
-
+    public String getIndex() {
+        return configBean.index;
+    }
 }

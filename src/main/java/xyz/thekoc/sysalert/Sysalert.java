@@ -1,5 +1,6 @@
 package xyz.thekoc.sysalert;
 
+import com.esotericsoftware.yamlbeans.YamlException;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -8,8 +9,10 @@ import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
+import xyz.thekoc.sysalert.conifg.Config;
 import xyz.thekoc.sysalert.rule.RuleType;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class Sysalert {
@@ -78,7 +81,16 @@ public class Sysalert {
     }
 
     public static void main(String[] args) {
-        Sysalert s = new Sysalert("localhost", 9200, "http");
+        // TODO: parse command line arguments
+        // TODO: add rules from `rule_folder`
+        Config config = Config.getConfig();
+        String rulePath = Sysalert.class.getClassLoader().getResource("test_rule.yml").getPath();
+        try {
+            config.addRule(rulePath);
+        } catch (FileNotFoundException | YamlException e) {
+            e.printStackTrace();
+        }
+        Sysalert s = new Sysalert(config.getHostname(), config.getPort(), config.getScheme());
         s.start();
     }
 }

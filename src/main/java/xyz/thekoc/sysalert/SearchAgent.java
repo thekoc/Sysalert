@@ -24,6 +24,10 @@ public class SearchAgent {
          querySize = 10000;
     }
 
+    public SearchResponse search(String index, QueryBuilder query) {
+        return search(index, query, null);
+    }
+
     public SearchResponse search(String index, QueryBuilder query, SortBuilder sort) {
         SearchRequest searchRequest = new SearchRequest(index);
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();

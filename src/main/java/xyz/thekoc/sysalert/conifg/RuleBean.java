@@ -6,6 +6,8 @@ import java.util.Map;
 public class RuleBean {
     public String type;
     public String name;
-    public Map<String, Number> timewindow;
+    public String index = null;
+    public int num_events;
+    public Map<String, Integer> timewindow;
     public List<Map> filter;
 }

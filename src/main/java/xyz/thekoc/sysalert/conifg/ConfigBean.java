@@ -4,4 +4,6 @@ public class ConfigBean {
     public String es_host = "localhost";
     public int es_port = 9200;
     public String scheme = "http";
+    public String rules_folder = null;
+    public String index = null;
 }
