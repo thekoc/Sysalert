@@ -11,24 +11,11 @@ import xyz.thekoc.sysalert.rule.FrequencyRule;
 import xyz.thekoc.sysalert.rule.RuleType;
 import xyz.thekoc.sysalert.rule.SysmonFrequencyRule;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class RuleBuilder {
     static RuleType fromRuleBean(RuleBean ruleBean) {
         Config config = Config.getConfig();
-
-        Gson gson = new Gson();
-        HashMap<String, List> filters = new HashMap<String, List>();
-        filters.put("filter", ruleBean.filter);
-        HashMap<String, Map> boolQuery = new HashMap<>();
-        boolQuery.put("bool", filters);
-        String json = gson.toJson(boolQuery);
-        QueryBuilder filterQuery = QueryBuilders.wrapperQuery(json);
-
         String index = ruleBean.index != null ? ruleBean.index : config.getIndex();
 
         Period timeWindow = Period.ZERO;
@@ -65,7 +52,7 @@ public class RuleBuilder {
         }
     }
 
-    static QueryBuilder getFilter(List filter) {
+    private static QueryBuilder getFilter(List filter) {
         Gson gson = new Gson();
         HashMap<String, Object> filters = new HashMap<String, Object>();
         filters.put("filter", filter);
