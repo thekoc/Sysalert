@@ -5,3 +5,5 @@ timewindow:
 filter:
   - term:
       event_id: 3
+num_events: 10
+index: sysalert-*

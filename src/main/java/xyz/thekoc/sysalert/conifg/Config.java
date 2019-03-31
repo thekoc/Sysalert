@@ -38,12 +38,8 @@ public class Config {
        return configSingletonInstance;
     }
 
-    public void addRule(String pathname) throws FileNotFoundException, YamlException {
-        try {
-            ruleTypes.add(RuleBuilder.fromFile(pathname));
-        } catch (FieldMissingException e) {
-            e.printStackTrace();
-        }
+    public void addRule(String pathname) throws FileNotFoundException, YamlException, FieldMissingException {
+        ruleTypes.add(RuleBuilder.fromFile(pathname));
     }
 
     public String getHostname() {

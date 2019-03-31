@@ -2,7 +2,7 @@ package xyz.thekoc.sysalert.alert;
 
 import org.joda.time.DateTime;
 import xyz.thekoc.sysalert.MatchedEvent;
-import xyz.thekoc.sysalert.PostAgent;
+import xyz.thekoc.sysalert.agent.PostAgent;
 import xyz.thekoc.sysalert.conifg.Config;
 
 import java.io.IOException;

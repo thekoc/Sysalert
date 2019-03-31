@@ -1,4 +1,4 @@
-package xyz.thekoc.sysalert;
+package xyz.thekoc.sysalert.agent;
 
 import org.apache.http.HttpHost;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;

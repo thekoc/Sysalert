@@ -1,4 +1,4 @@
-package xyz.thekoc.sysalert;
+package xyz.thekoc.sysalert.agent;
 
 import org.apache.http.HttpHost;
 import org.elasticsearch.action.search.SearchRequest;
@@ -8,9 +8,7 @@ import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
-import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
-import org.elasticsearch.search.sort.SortOrder;
 
 import java.io.IOException;
 

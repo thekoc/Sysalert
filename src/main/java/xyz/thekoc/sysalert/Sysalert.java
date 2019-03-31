@@ -9,7 +9,9 @@ import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
+import xyz.thekoc.sysalert.agent.SearchAgent;
 import xyz.thekoc.sysalert.conifg.Config;
+import xyz.thekoc.sysalert.conifg.FieldMissingException;
 import xyz.thekoc.sysalert.rule.RuleType;
 
 import java.io.FileNotFoundException;
@@ -86,16 +88,12 @@ public class Sysalert {
         rule.addMatchedEvents(matchedEvents);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException, FieldMissingException, YamlException {
         // TODO: parse command line arguments
         // TODO: add rules from `rule_folder`
         Config config = Config.getConfig();
         String rulePath = Sysalert.class.getClassLoader().getResource("test_rule.yml").getPath();
-        try {
-            config.addRule(rulePath);
-        } catch (FileNotFoundException | YamlException e) {
-            e.printStackTrace();
-        }
+        config.addRule(rulePath);
         Sysalert s = new Sysalert(config.getHostname(), config.getPort(), config.getScheme());
         s.addRules(config.getRuleTypes());
         s.start();

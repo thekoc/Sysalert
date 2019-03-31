@@ -5,6 +5,7 @@ import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.junit.Test;
+import xyz.thekoc.sysalert.agent.SearchAgent;
 
 public class SearchAgentTest {
 
