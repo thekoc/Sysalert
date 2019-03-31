@@ -1,5 +1,5 @@
 name: test frequency rule
-type: sysmon_frequency_rule
+type: sysmon_frequency
 timewindow:
   minutes: 10
 filter:

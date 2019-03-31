@@ -8,12 +8,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Config {
     private ConfigBean configBean = new ConfigBean();
-    private ArrayList<RuleBean> ruleBeans= new ArrayList<RuleBean>();
+    private ArrayList<RuleType> ruleTypes = new ArrayList<RuleType>();
     private static Config configSingletonInstance = null;
 
     private Config(String pathname) throws FileNotFoundException {
@@ -40,14 +39,11 @@ public class Config {
     }
 
     public void addRule(String pathname) throws FileNotFoundException, YamlException {
-        YamlReader reader = new YamlReader(new FileReader(pathname));
-        reader.getConfig().setPropertyDefaultType(RuleBean.class, "timewindow", TimeWindowBean.class);
-        RuleBean ruleBean = reader.read(RuleBean.class);
-        ruleBeans.add(ruleBean);
-    }
-
-    public ArrayList<RuleBean> getRuleBeans() {
-        return ruleBeans;
+        try {
+            ruleTypes.add(RuleBuilder.fromFile(pathname));
+        } catch (FieldMissingException e) {
+            e.printStackTrace();
+        }
     }
 
     public String getHostname() {
@@ -67,6 +63,6 @@ public class Config {
     }
 
     public List<RuleType> getRuleTypes() {
-        return ruleBeans.stream().map(RuleBuilder::fromRuleBean).collect(Collectors.toList());
+        return ruleTypes;
     }
 }

@@ -25,6 +25,9 @@ public class MonitoredEventTypes implements Iterable<MonitoredEventType> {
     }
 
     public void addFilterToAll(QueryBuilder filter) {
+        if (filter == null) {
+            return;
+        }
         for (MonitoredEventType eventType: monitoredEventTypes) {
             eventType.setFilter(new BoolQueryBuilder().filter(eventType.getFilter()).filter(filter));
         }
