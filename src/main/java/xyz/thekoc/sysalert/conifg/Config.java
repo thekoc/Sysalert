@@ -2,10 +2,14 @@ package xyz.thekoc.sysalert.conifg;
 
 import com.esotericsoftware.yamlbeans.YamlException;
 import com.esotericsoftware.yamlbeans.YamlReader;
+import xyz.thekoc.sysalert.rule.RuleType;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Config {
     private ConfigBean configBean = new ConfigBean();
@@ -37,6 +41,7 @@ public class Config {
 
     public void addRule(String pathname) throws FileNotFoundException, YamlException {
         YamlReader reader = new YamlReader(new FileReader(pathname));
+        reader.getConfig().setPropertyDefaultType(RuleBean.class, "timewindow", TimeWindowBean.class);
         RuleBean ruleBean = reader.read(RuleBean.class);
         ruleBeans.add(ruleBean);
     }
@@ -59,5 +64,9 @@ public class Config {
 
     public String getIndex() {
         return configBean.index;
+    }
+
+    public List<RuleType> getRuleTypes() {
+        return ruleBeans.stream().map(RuleBuilder::fromRuleBean).collect(Collectors.toList());
     }
 }

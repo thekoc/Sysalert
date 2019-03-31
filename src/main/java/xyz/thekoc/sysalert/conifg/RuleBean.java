@@ -8,6 +8,10 @@ public class RuleBean {
     public String name;
     public String index = null;
     public int num_events;
-    public Map<String, Integer> timewindow;
+    public TimeWindowBean timewindow;
     public List<Map> filter;
+
+    static public RuleBean fromFile(String pathname) {
+        return null;
+    }
 }

@@ -6,10 +6,7 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.joda.time.Period;
 import xyz.thekoc.sysalert.MonitoredEventType;
 import xyz.thekoc.sysalert.MonitoredEventTypes;
-import xyz.thekoc.sysalert.rule.CombinationRule;
-import xyz.thekoc.sysalert.rule.FrequencyRule;
-import xyz.thekoc.sysalert.rule.RuleType;
-import xyz.thekoc.sysalert.rule.SysmonFrequencyRule;
+import xyz.thekoc.sysalert.rule.*;
 
 import java.util.*;
 
@@ -19,22 +16,11 @@ public class RuleBuilder {
         String index = ruleBean.index != null ? ruleBean.index : config.getIndex();
 
         Period timeWindow = Period.ZERO;
-        Map<String, Integer> timeWindowBean = ruleBean.timewindow;
-        if (timeWindowBean.get("days") != null) {
-            timeWindow.plus(Period.days(timeWindowBean.get("days")));
-        }
-        if (timeWindowBean.get("hours") != null) {
-            timeWindow.plus(Period.hours(timeWindowBean.get("hours")));
-        }
-        if (timeWindowBean.get("minutes") != null) {
-            timeWindow.plus(Period.minutes(timeWindowBean.get("minutes")));
-        }
-        if (timeWindowBean.get("seconds") != null) {
-            timeWindow.plus(Period.seconds(timeWindowBean.get("seconds")));
-        }
-
-
-
+        TimeWindowBean timeWindowBean = ruleBean.timewindow;
+        timeWindow.plus(Period.days(timeWindowBean.days));
+        timeWindow.plus(Period.hours(timeWindowBean.hours));
+        timeWindow.plus(Period.minutes(timeWindowBean.minutes));
+        timeWindow.plus(Period.seconds(timeWindowBean.seconds));
 
         switch (ruleBean.type) {
             case "frequency_rule":
@@ -42,11 +28,17 @@ public class RuleBuilder {
             case "sysmon_frequency_rule":
                 return new SysmonFrequencyRule(index, timeWindow, getFilter(ruleBean.filter), ruleBean.num_events);
             case "combination_rule":
-                MonitoredEventTypes monitoredEventTypes = new MonitoredEventTypes();
+                MonitoredEventTypes combinationRuleTypes = new MonitoredEventTypes();
                 for (Map filter: ruleBean.filter) {
-                    monitoredEventTypes.add(new MonitoredEventType(getFilter(Collections.singletonList(filter))));
+                    combinationRuleTypes.add(new MonitoredEventType(getFilter(Collections.singletonList(filter))));
                 }
-                return new CombinationRule(index, timeWindow, monitoredEventTypes);
+                return new CombinationRule(index, timeWindow, combinationRuleTypes);
+            case "sequence_rule":
+                MonitoredEventTypes sequenceRuleTypes = new MonitoredEventTypes();
+                for (Map filter: ruleBean.filter) {
+                    sequenceRuleTypes.add(new MonitoredEventType(getFilter(Collections.singletonList(filter))));
+                }
+                return new SequenceRule(index, timeWindow, sequenceRuleTypes);
             default:
                 return null;
         }

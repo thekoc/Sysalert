@@ -28,6 +28,12 @@ public class Sysalert {
         rules.add(rule);
     }
 
+    public void addRules(Iterable<RuleType> rules) {
+        for (RuleType rule: rules) {
+            addRule(rule);
+        }
+    }
+
     public void start() {
         startDateTime = DateTime.now();
         while (running) {
@@ -91,6 +97,7 @@ public class Sysalert {
             e.printStackTrace();
         }
         Sysalert s = new Sysalert(config.getHostname(), config.getPort(), config.getScheme());
+        s.addRules(config.getRuleTypes());
         s.start();
     }
 }

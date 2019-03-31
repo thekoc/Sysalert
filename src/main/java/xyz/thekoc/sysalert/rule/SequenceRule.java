@@ -14,6 +14,11 @@ public class SequenceRule extends RuleType {
     private Queue<MatchedEvent> matchedEvents = new LinkedList<>();
     private Period timeWindow;
 
+    public SequenceRule(String index, Period timeWindow, MonitoredEventTypes monitoredEventTypes) {
+        super(index, monitoredEventTypes);
+        this.timeWindow = timeWindow;
+    }
+
     public SequenceRule(String index, Period timeWindow, QueryBuilder... filters) {
         super(index, new MonitoredEventTypes(filters));
         this.timeWindow = timeWindow;
@@ -46,7 +51,7 @@ public class SequenceRule extends RuleType {
         }
     }
 
-    public boolean exists(Queue<MatchedEvent> matchedEvents, MonitoredEventTypes monitoredEventTypes) {
+    private boolean exists(Queue<MatchedEvent> matchedEvents, MonitoredEventTypes monitoredEventTypes) {
         int cursor = 0;
         for (MatchedEvent matchedEvent: matchedEvents) {
             if (cursor < monitoredEventTypes.size() && matchedEvent.isEventType(monitoredEventTypes.get(cursor))) {
