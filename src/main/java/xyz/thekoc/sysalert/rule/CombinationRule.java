@@ -58,7 +58,7 @@ public class CombinationRule extends RuleType {
             }
 
             if (alertFlag) {
-                System.out.println("Combanation Alerting!!!!!");
+                ruleHits.addHit("Alerting!", "combination");
             }
         }
     }

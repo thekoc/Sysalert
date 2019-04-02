@@ -32,7 +32,7 @@ public class FrequencyRule extends RuleType {
             }
 
             if (this.matchedEvents.size() > threshold) {
-                System.out.println("Frequency Alerting!");
+                ruleHits.addHit("Alerting!", "frequency");
             }
         }
     }

@@ -11,6 +11,7 @@ import xyz.thekoc.sysalert.MatchedEvent;
 import xyz.thekoc.sysalert.MonitoredEventType;
 import xyz.thekoc.sysalert.MonitoredEventTypes;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public abstract class RuleType {
@@ -18,6 +19,7 @@ public abstract class RuleType {
     MonitoredEventTypes monitoredEventTypes;
     private String timestampField = "@timestamp";
     private Period queryDelay = Period.seconds(0);
+    protected RuleHits ruleHits = new RuleHits();
     private Interval lastQueryInterval = null;
     private String timePattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     private DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern(timePattern);
@@ -87,6 +89,10 @@ public abstract class RuleType {
 
     public void setQueryDelay(Period queryDelay) {
         this.queryDelay = queryDelay;
+    }
+
+    public RuleHits getRuleHits() {
+        return ruleHits;
     }
 }
 

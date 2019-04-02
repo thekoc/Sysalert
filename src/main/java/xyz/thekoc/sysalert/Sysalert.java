@@ -13,6 +13,7 @@ import xyz.thekoc.sysalert.agent.SearchAgent;
 import xyz.thekoc.sysalert.conifg.Config;
 import xyz.thekoc.sysalert.conifg.FieldMissingException;
 import xyz.thekoc.sysalert.conifg.NoSuchRuleException;
+import xyz.thekoc.sysalert.rule.RuleHit;
 import xyz.thekoc.sysalert.rule.RuleType;
 
 import java.io.FileNotFoundException;
@@ -66,8 +67,13 @@ public class Sysalert {
 
             for (MonitoredEventType eventType: rule.getMonitoredEventTypes()) {
                 runQuery(rule, eventType, queryInterval);
+                // TODO: handle the hits
+                for (RuleHit hit: rule.getRuleHits()) {
+                    System.out.println(hit.ruleType + hit.message);
+                }
             }
             rule.setLastQueryInterval(queryInterval);
+
         }
     }
 
@@ -80,8 +86,6 @@ public class Sysalert {
         QueryBuilder finalQuery = QueryBuilders.boolQuery().filter(eventType.getFilter()).filter(rangeQueryBuilder);
         FieldSortBuilder sort = new FieldSortBuilder(rule.getTimestampField()).order(SortOrder.ASC);
         SearchResponse response = searchAgent.search(rule.getIndex(), finalQuery, sort);
-//        System.out.println("real total heat: " + response.getHits().totalHits);
-//        System.out.println(rangeQueryBuilder);
         ArrayList<MatchedEvent> matchedEvents = new ArrayList<>();
         for (SearchHit hit: response.getHits()) {
             matchedEvents.add(new MatchedEvent(hit, eventType, rule.getDate(hit)));

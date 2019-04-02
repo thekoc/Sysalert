@@ -16,7 +16,7 @@ public class BlacklistRule extends RuleType {
     public void addMatchedEvents(List<MatchedEvent> matchedEvents) {
         for (MatchedEvent event: matchedEvents) {
             if (monitoredEventTypes.contains((event.getMonitoredEventType()))) {
-                System.out.println("Alerting");
+                ruleHits.addHit("Alerting!", "blacklist");
             }
         }
     }

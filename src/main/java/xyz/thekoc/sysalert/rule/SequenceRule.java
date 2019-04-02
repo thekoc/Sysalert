@@ -32,7 +32,7 @@ public class SequenceRule extends RuleType {
                 this.matchedEvents.poll();
             }
             if (exists(this.matchedEvents, monitoredEventTypes)) {
-                System.out.println("Alerting!");
+                ruleHits.addHit("Alerting!", "sequence");
             }
         }
     }
