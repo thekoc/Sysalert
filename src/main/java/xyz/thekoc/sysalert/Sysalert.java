@@ -12,6 +12,7 @@ import org.joda.time.Interval;
 import xyz.thekoc.sysalert.agent.SearchAgent;
 import xyz.thekoc.sysalert.conifg.Config;
 import xyz.thekoc.sysalert.conifg.FieldMissingException;
+import xyz.thekoc.sysalert.conifg.NoSuchRuleException;
 import xyz.thekoc.sysalert.rule.RuleType;
 
 import java.io.FileNotFoundException;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 
 public class Sysalert {
     private boolean running = true;
-    private ArrayList<RuleType> rules = new ArrayList<RuleType>();
+    private ArrayList<RuleType> rules = new ArrayList<>();
     private SearchAgent searchAgent;
     private DateTime startDateTime = null;
     public Sysalert(String hostname, int port, String scheme) {
@@ -88,7 +89,7 @@ public class Sysalert {
         rule.addMatchedEvents(matchedEvents);
     }
 
-    public static void main(String[] args) throws FileNotFoundException, FieldMissingException, YamlException {
+    public static void main(String[] args) throws FileNotFoundException, FieldMissingException, YamlException, NoSuchRuleException {
         // TODO: parse command line arguments
         // TODO: add rules from `rule_folder`
         Config config = Config.getConfig();

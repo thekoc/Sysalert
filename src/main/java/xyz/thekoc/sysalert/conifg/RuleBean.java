@@ -8,7 +8,8 @@ public class RuleBean {
     public String name;
     public String index = null;
     public Integer num_events;
-    public TimeWindowBean timewindow;
+    public PeriodBean timewindow;
+    public PeriodBean query_delay;
     public List<Map> filter;
     public List<Map> sequence;
     public List<Map> combination;

@@ -15,7 +15,7 @@ import java.io.FileReader;
 import java.util.*;
 
 class RuleBuilder {
-    static RuleType fromFile(String pathname) throws FileNotFoundException, YamlException, FieldMissingException {
+    static RuleType fromFile(String pathname) throws FileNotFoundException, YamlException, FieldMissingException, NoSuchRuleException {
         YamlReader rawReader = new YamlReader(new FileReader(pathname));
         Map rawYamlObject = (Map) rawReader.read();
 
@@ -26,7 +26,7 @@ class RuleBuilder {
             throw new YamlException("type field cannot be null!");
         } else if (Arrays.asList("frequency", "sysmon_frequency", "combination", "sequence", "blacklist").contains(type)) {
             YamlReader reader = new YamlReader(new FileReader(pathname));
-            reader.getConfig().setPropertyDefaultType(RuleBean.class, "timewindow", TimeWindowBean.class);
+            reader.getConfig().setPropertyDefaultType(RuleBean.class, "timewindow", PeriodBean.class);
             RuleBean ruleBean = reader.read(RuleBean.class);
 
 
@@ -59,42 +59,57 @@ class RuleBuilder {
                     break;
             }
 
-            Period timeWindow = Period.ZERO;
-            TimeWindowBean timeWindowBean = ruleBean.timewindow;
-            timeWindow.plus(Period.days(timeWindowBean.days));
-            timeWindow.plus(Period.hours(timeWindowBean.hours));
-            timeWindow.plus(Period.minutes(timeWindowBean.minutes));
-            timeWindow.plus(Period.seconds(timeWindowBean.seconds));
+            Period timeWindow = periodFromPeriodBean(ruleBean.timewindow);
+            Period queryDelay = periodFromPeriodBean(ruleBean.query_delay);
+            RuleType newRule;
 
             switch (ruleBean.type) {
                 case "blacklist":
-                    return new BlacklistRule(index, getFilter(ruleBean.filter));
+                    newRule = new BlacklistRule(index, getFilter(ruleBean.filter));
+                    break;
                 case "frequency":
-                    return new FrequencyRule(index, timeWindow, getFilter(ruleBean.filter), ruleBean.num_events);
+                    newRule = new FrequencyRule(index, timeWindow, getFilter(ruleBean.filter), ruleBean.num_events);
+                    break;
                 case "sysmon_frequency":
-                    return new SysmonFrequencyRule(index, timeWindow, getFilter(ruleBean.filter), ruleBean.num_events);
+                    newRule = new SysmonFrequencyRule(index, timeWindow, getFilter(ruleBean.filter), ruleBean.num_events);
+                    break;
                 case "combination":
                     MonitoredEventTypes combinationRuleTypes = new MonitoredEventTypes();
                     for (Map filter: ruleBean.combination) {
                         combinationRuleTypes.add(new MonitoredEventType(getFilter(Collections.singletonList(filter))));
                     }
                     combinationRuleTypes.addFilterToAll(getFilter(ruleBean.filter));
-                    return new CombinationRule(index, timeWindow, combinationRuleTypes);
+                    newRule = new CombinationRule(index, timeWindow, combinationRuleTypes);
+                    break;
                 case "sequence":
                     MonitoredEventTypes sequenceRuleTypes = new MonitoredEventTypes();
                     for (Map filter: ruleBean.sequence) {
                         sequenceRuleTypes.add(new MonitoredEventType(getFilter(Collections.singletonList(filter))));
                     }
                     sequenceRuleTypes.addFilterToAll(getFilter(ruleBean.filter));
-                    return new CombinationRule(index, timeWindow, sequenceRuleTypes);
+                    newRule = new CombinationRule(index, timeWindow, sequenceRuleTypes);
+                    break;
+                default:
+                    throw new NoSuchRuleException("No such rule: " + ruleBean.type);
             }
+
+            newRule.setQueryDelay(queryDelay);
         }
         return null;
     }
 
+    private static Period periodFromPeriodBean(PeriodBean periodBean) {
+        Period period = Period.ZERO;
+        period.plus(Period.days(periodBean.days));
+        period.plus(Period.hours(periodBean.hours));
+        period.plus(Period.minutes(periodBean.minutes));
+        period.plus(Period.seconds(periodBean.seconds));
+        return period;
+    }
+
     private static QueryBuilder getFilter(List filter) {
         Gson gson = new Gson();
-        HashMap<String, Object> filters = new HashMap<String, Object>();
+        HashMap<String, Object> filters = new HashMap<>();
         filters.put("filter", filter);
         HashMap<String, Map> boolQuery = new HashMap<>();
         boolQuery.put("bool", filters);

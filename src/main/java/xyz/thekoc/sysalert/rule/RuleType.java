@@ -17,7 +17,7 @@ public abstract class RuleType {
     protected String index;
     MonitoredEventTypes monitoredEventTypes;
     private String timestampField = "@timestamp";
-    private Period queryDelay = Period.seconds(1);
+    private Period queryDelay = Period.seconds(0);
     private Interval lastQueryInterval = null;
     private String timePattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     private DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern(timePattern);

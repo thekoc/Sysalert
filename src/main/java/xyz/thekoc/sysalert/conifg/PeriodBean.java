@@ -1,6 +1,6 @@
 package xyz.thekoc.sysalert.conifg;
 
-public class TimeWindowBean {
+public class PeriodBean {
     public int days = 0;
     public int hours = 0;
     public int minutes = 0;

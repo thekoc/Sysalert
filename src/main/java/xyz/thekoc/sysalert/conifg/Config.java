@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 public class Config {
     private ConfigBean configBean = new ConfigBean();
-    private ArrayList<RuleType> ruleTypes = new ArrayList<RuleType>();
+    private ArrayList<RuleType> ruleTypes = new ArrayList<>();
     private static Config configSingletonInstance = null;
 
     private Config(String pathname) throws FileNotFoundException {
@@ -38,7 +38,7 @@ public class Config {
        return configSingletonInstance;
     }
 
-    public void addRule(String pathname) throws FileNotFoundException, YamlException, FieldMissingException {
+    public void addRule(String pathname) throws FileNotFoundException, YamlException, FieldMissingException, NoSuchRuleException {
         ruleTypes.add(RuleBuilder.fromFile(pathname));
     }
 
