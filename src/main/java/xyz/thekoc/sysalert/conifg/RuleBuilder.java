@@ -8,6 +8,8 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.joda.time.Period;
 import xyz.thekoc.sysalert.MonitoredEventType;
 import xyz.thekoc.sysalert.MonitoredEventTypes;
+import xyz.thekoc.sysalert.alert.ConsoleAlerter;
+import xyz.thekoc.sysalert.alert.PopupAlerter;
 import xyz.thekoc.sysalert.rule.*;
 
 import java.io.FileNotFoundException;
@@ -94,6 +96,11 @@ class RuleBuilder {
             }
 
             newRule.setQueryDelay(queryDelay);
+
+            // TODO: config the alerters
+            newRule.addAlerter(new ConsoleAlerter());
+            newRule.addAlerter(new PopupAlerter());
+            return newRule;
         }
         return null;
     }

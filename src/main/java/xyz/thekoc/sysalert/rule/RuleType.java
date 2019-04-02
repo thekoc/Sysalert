@@ -10,8 +10,9 @@ import org.joda.time.format.DateTimeFormatter;
 import xyz.thekoc.sysalert.MatchedEvent;
 import xyz.thekoc.sysalert.MonitoredEventType;
 import xyz.thekoc.sysalert.MonitoredEventTypes;
+import xyz.thekoc.sysalert.alert.Alerter;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class RuleType {
@@ -20,6 +21,7 @@ public abstract class RuleType {
     private String timestampField = "@timestamp";
     private Period queryDelay = Period.seconds(0);
     protected RuleHits ruleHits = new RuleHits();
+    private List<Alerter> alerts = new ArrayList<>();
     private Interval lastQueryInterval = null;
     private String timePattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     private DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern(timePattern);
@@ -93,6 +95,14 @@ public abstract class RuleType {
 
     public RuleHits getRuleHits() {
         return ruleHits;
+    }
+
+    public List<Alerter> getAlerters() {
+        return alerts;
+    }
+
+    public void addAlerter(Alerter alerter) {
+        alerts.add(alerter);
     }
 }
 

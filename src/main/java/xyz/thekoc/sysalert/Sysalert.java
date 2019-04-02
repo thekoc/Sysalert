@@ -10,6 +10,7 @@ import org.elasticsearch.search.sort.SortOrder;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import xyz.thekoc.sysalert.agent.SearchAgent;
+import xyz.thekoc.sysalert.alert.Alerter;
 import xyz.thekoc.sysalert.conifg.Config;
 import xyz.thekoc.sysalert.conifg.FieldMissingException;
 import xyz.thekoc.sysalert.conifg.NoSuchRuleException;
@@ -64,12 +65,14 @@ public class Sysalert {
                 queryInterval = new Interval(rule.getLastQueryInterval().getEnd(), DateTime.now().minus(rule.getQueryDelay()));
             }
 
-
             for (MonitoredEventType eventType: rule.getMonitoredEventTypes()) {
                 runQuery(rule, eventType, queryInterval);
-                // TODO: handle the hits
-                for (RuleHit hit: rule.getRuleHits()) {
-                    System.out.println(hit.ruleType + hit.message);
+                RuleHit ruleHit = rule.getRuleHits().poll();
+                while (ruleHit != null) {
+                    for (Alerter alerter: rule.getAlerters()) {
+                        alerter.alert(ruleHit);
+                    }
+                    ruleHit = rule.getRuleHits().poll();
                 }
             }
             rule.setLastQueryInterval(queryInterval);

@@ -5,7 +5,6 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static org.junit.Assert.*;
 
 public class ElasticsearchAlerterTest {
 
@@ -13,10 +12,5 @@ public class ElasticsearchAlerterTest {
 
     @Test
     public void alert() {
-        try {
-            elasticsearchAlerter.alert(new ArrayList<>());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }
