@@ -1,9 +1,12 @@
 name: test frequency rule
-type: sysmon_frequency
+type: combination
 timewindow:
   minutes: 10
-filter:
+combination:
   - term:
       event_id: 3
-num_events: 10
+  - term:
+      event_id: 4
+  - term:
+      event_id: 5
 index: sysalert-*

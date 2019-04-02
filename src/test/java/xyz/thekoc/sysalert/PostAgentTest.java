@@ -54,4 +54,29 @@ public class PostAgentTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void generateEvent(int interval, int eventPerTime, int eventId) {
+        new Thread(() ->
+        {
+            try {
+                int totalPosted = 0;
+                while (true) {
+                    Thread.sleep(interval);
+                    for (int i = 0; i < eventPerTime; i++) {
+                        totalPosted += 1;
+                        post.postData("sysalert-test", "_doc",
+                                "event_id", eventId,
+                                "@timestamp", DateTime.now(),
+                                "message", "trying out Elasticsearch",
+                                "source_name", "Microsoft-Windows-Sysmon");
+                    }
+//                System.out.println("totalPosted: " + totalPosted);
+                }
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        }).start();
+    }
 }

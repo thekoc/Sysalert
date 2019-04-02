@@ -10,6 +10,6 @@ public class RuleBean {
     public Integer num_events;
     public TimeWindowBean timewindow;
     public List<Map> filter;
-    public List<Map> event_sequence;
-    public List<Map> event_combination;
+    public List<Map> sequence;
+    public List<Map> combination;
 }

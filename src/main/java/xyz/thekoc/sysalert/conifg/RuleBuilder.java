@@ -48,12 +48,12 @@ class RuleBuilder {
                     }
                     break;
                 case "combination":
-                    if (ruleBean.event_combination == null) {
+                    if (ruleBean.combination == null) {
                         throw new FieldMissingException();
                     }
                     break;
                 case "sequence":
-                    if (ruleBean.event_sequence == null) {
+                    if (ruleBean.sequence == null) {
                         throw new FieldMissingException();
                     }
                     break;
@@ -75,14 +75,14 @@ class RuleBuilder {
                     return new SysmonFrequencyRule(index, timeWindow, getFilter(ruleBean.filter), ruleBean.num_events);
                 case "combination":
                     MonitoredEventTypes combinationRuleTypes = new MonitoredEventTypes();
-                    for (Map filter: ruleBean.event_combination) {
+                    for (Map filter: ruleBean.combination) {
                         combinationRuleTypes.add(new MonitoredEventType(getFilter(Collections.singletonList(filter))));
                     }
                     combinationRuleTypes.addFilterToAll(getFilter(ruleBean.filter));
                     return new CombinationRule(index, timeWindow, combinationRuleTypes);
                 case "sequence":
                     MonitoredEventTypes sequenceRuleTypes = new MonitoredEventTypes();
-                    for (Map filter: ruleBean.event_sequence) {
+                    for (Map filter: ruleBean.sequence) {
                         sequenceRuleTypes.add(new MonitoredEventType(getFilter(Collections.singletonList(filter))));
                     }
                     sequenceRuleTypes.addFilterToAll(getFilter(ruleBean.filter));
