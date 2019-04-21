@@ -16,13 +16,13 @@ public class CombinationRule extends RuleType {
     private Map<MonitoredEventType, Integer> windowEventCounter = new Hashtable<>();
 
     public CombinationRule(String index, Period timeWindow, QueryBuilder... filters) {
-        this(index, timeWindow, new MonitoredEventTypes(Arrays.stream(filters).map((filter) -> new MonitoredEventType(filter, 1)).collect(Collectors.toList())));
+        this(timeWindow, new MonitoredEventTypes(Arrays.stream(filters).map((filter) -> new MonitoredEventType(index, filter, 1)).collect(Collectors.toList())));
     }
-    public CombinationRule(String index, Period timeWindow, MonitoredEventType... monitoredEventTypes) {
-        this(index, timeWindow, new MonitoredEventTypes(Arrays.asList(monitoredEventTypes)));
+    public CombinationRule(Period timeWindow, MonitoredEventType... monitoredEventTypes) {
+        this(timeWindow, new MonitoredEventTypes(Arrays.asList(monitoredEventTypes)));
     }
-    public CombinationRule(String index, Period timeWindow, MonitoredEventTypes monitoredEventTypes) {
-        super(index, monitoredEventTypes);
+    public CombinationRule(Period timeWindow, MonitoredEventTypes monitoredEventTypes) {
+        super(monitoredEventTypes);
         this.timeWindow = timeWindow;
     }
 

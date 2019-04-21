@@ -6,18 +6,19 @@ import xyz.thekoc.sysalert.MonitoredEventTypes;
 
 import java.util.List;
 
-public class BlacklistRule extends RuleType {
+public class WhitelistRule extends RuleType {
 
-    public BlacklistRule(String index, QueryBuilder... filters) {
+    public WhitelistRule(String index, QueryBuilder... filters) {
         super(index, filters);
     }
 
     @Override
     public void addMatchedEvents(List<MatchedEvent> matchedEvents) {
         for (MatchedEvent event: matchedEvents) {
-            if (monitoredEventTypes.contains((event.getMonitoredEventType()))) {
-                ruleHits.addHit("Alerting!", "blacklist");
+            if (!monitoredEventTypes.contains((event.getMonitoredEventType()))) {
+                ruleHits.addHit("Alerting!", "whitelist");
             }
         }
     }
 }
+

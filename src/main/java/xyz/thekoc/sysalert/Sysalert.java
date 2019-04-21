@@ -14,6 +14,7 @@ import xyz.thekoc.sysalert.alert.Alerter;
 import xyz.thekoc.sysalert.conifg.Config;
 import xyz.thekoc.sysalert.conifg.FieldMissingException;
 import xyz.thekoc.sysalert.conifg.NoSuchRuleException;
+import xyz.thekoc.sysalert.rule.CompoundRule;
 import xyz.thekoc.sysalert.rule.RuleHit;
 import xyz.thekoc.sysalert.rule.RuleType;
 
@@ -58,14 +59,13 @@ public class Sysalert {
 
     private void runAllRules() {
         for (RuleType rule: rules) {
-            Interval queryInterval;
-            if (rule.getLastQueryInterval() == null) {
-                queryInterval = new Interval(startDateTime.minus(rule.getQueryDelay()), DateTime.now().minus(rule.getQueryDelay()));
-            } else {
-                queryInterval = new Interval(rule.getLastQueryInterval().getEnd(), DateTime.now().minus(rule.getQueryDelay()));
-            }
-
             for (MonitoredEventType eventType: rule.getMonitoredEventTypes()) {
+                Interval queryInterval;
+                if (eventType.getLastQueryInterval() == null) {
+                    queryInterval = new Interval(startDateTime.minus(eventType.getQueryDelay()), DateTime.now().minus(eventType.getQueryDelay()));
+                } else {
+                    queryInterval = new Interval(eventType.getLastQueryInterval().getEnd(), DateTime.now().minus(eventType.getQueryDelay()));
+                }
                 runQuery(rule, eventType, queryInterval);
                 RuleHit ruleHit = rule.getRuleHits().poll();
                 while (ruleHit != null) {
@@ -74,24 +74,25 @@ public class Sysalert {
                     }
                     ruleHit = rule.getRuleHits().poll();
                 }
+                eventType.setLastQueryInterval(queryInterval);
             }
-            rule.setLastQueryInterval(queryInterval);
+
 
         }
     }
 
     private void runQuery(RuleType rule, MonitoredEventType eventType, Interval queryInterval) {
-        String startTime = queryInterval.getStart().toString(rule.getDateTimeFormatter());
-        String endTime = queryInterval.getEnd().toString(rule.getDateTimeFormatter());
+        String startTime = queryInterval.getStart().toString(eventType.getDateTimeFormatter());
+        String endTime = queryInterval.getEnd().toString(eventType.getDateTimeFormatter());
 
         QueryBuilder rangeQueryBuilder = QueryBuilders.rangeQuery("@timestamp").
-                gte(startTime).lt(endTime).format(rule.getTimePattern());
+                gte(startTime).lt(endTime).format(eventType.getTimePattern());
         QueryBuilder finalQuery = QueryBuilders.boolQuery().filter(eventType.getFilter()).filter(rangeQueryBuilder);
-        FieldSortBuilder sort = new FieldSortBuilder(rule.getTimestampField()).order(SortOrder.ASC);
-        SearchResponse response = searchAgent.search(rule.getIndex(), finalQuery, sort);
+        FieldSortBuilder sort = new FieldSortBuilder(eventType.getTimestampField()).order(SortOrder.ASC);
+        SearchResponse response = searchAgent.search(eventType.getIndex(), finalQuery, sort);
         ArrayList<MatchedEvent> matchedEvents = new ArrayList<>();
         for (SearchHit hit: response.getHits()) {
-            matchedEvents.add(new MatchedEvent(hit, eventType, rule.getDate(hit)));
+            matchedEvents.add(new MatchedEvent(hit, eventType, eventType.getDate(hit)));
         }
         rule.addMatchedEvents(matchedEvents);
     }

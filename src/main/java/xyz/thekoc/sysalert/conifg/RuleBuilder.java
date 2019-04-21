@@ -69,6 +69,9 @@ class RuleBuilder {
                 case "blacklist":
                     newRule = new BlacklistRule(index, getFilter(ruleBean.filter));
                     break;
+                case "whitelist":
+                    newRule = new WhitelistRule(index, getFilter(ruleBean.filter));
+                    break;
                 case "frequency":
                     newRule = new FrequencyRule(index, timeWindow, getFilter(ruleBean.filter), ruleBean.num_events);
                     break;
@@ -78,24 +81,24 @@ class RuleBuilder {
                 case "combination":
                     MonitoredEventTypes combinationRuleTypes = new MonitoredEventTypes();
                     for (Map filter: ruleBean.combination) {
-                        combinationRuleTypes.add(new MonitoredEventType(getFilter(Collections.singletonList(filter))));
+                        combinationRuleTypes.add(new MonitoredEventType(index, getFilter(Collections.singletonList(filter))));
                     }
                     combinationRuleTypes.addFilterToAll(getFilter(ruleBean.filter));
-                    newRule = new CombinationRule(index, timeWindow, combinationRuleTypes);
+                    newRule = new CombinationRule(timeWindow, combinationRuleTypes);
                     break;
                 case "sequence":
                     MonitoredEventTypes sequenceRuleTypes = new MonitoredEventTypes();
                     for (Map filter: ruleBean.sequence) {
-                        sequenceRuleTypes.add(new MonitoredEventType(getFilter(Collections.singletonList(filter))));
+                        sequenceRuleTypes.add(new MonitoredEventType(index, getFilter(Collections.singletonList(filter))));
                     }
                     sequenceRuleTypes.addFilterToAll(getFilter(ruleBean.filter));
-                    newRule = new CombinationRule(index, timeWindow, sequenceRuleTypes);
+                    newRule = new CombinationRule(timeWindow, sequenceRuleTypes);
                     break;
                 default:
                     throw new NoSuchRuleException("No such rule: " + ruleBean.type);
             }
 
-            newRule.setQueryDelay(queryDelay);
+            newRule.setQueryDelayForAll(queryDelay);
 
             // TODO: config the alerters
             newRule.addAlerter(new ConsoleAlerter());

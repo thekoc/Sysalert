@@ -14,13 +14,13 @@ public class SequenceRule extends RuleType {
     private Queue<MatchedEvent> matchedEvents = new LinkedList<>();
     private Period timeWindow;
 
-    public SequenceRule(String index, Period timeWindow, MonitoredEventTypes monitoredEventTypes) {
-        super(index, monitoredEventTypes);
+    public SequenceRule(Period timeWindow, MonitoredEventTypes monitoredEventTypes) {
+        super(monitoredEventTypes);
         this.timeWindow = timeWindow;
     }
 
     public SequenceRule(String index, Period timeWindow, QueryBuilder... filters) {
-        super(index, new MonitoredEventTypes(filters));
+        super(index, filters);
         this.timeWindow = timeWindow;
     }
 
