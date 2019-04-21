@@ -1,4 +1,4 @@
-package xyz.thekoc.sysalert;
+package xyz.thekoc.sysalert.agent;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
@@ -11,6 +11,7 @@ public class PostAgentTest {
 
     @Test
     public void initIndex() {
+        System.out.println(123);
         try {
             post.initIndex("sysalert-test", "_doc",
                     "message", "type=text", "@timestamp", "type=date",
@@ -23,19 +24,6 @@ public class PostAgentTest {
 
     @Test
     public void postData() {
-        (new Thread(() ->
-        {
-//            try {
-//                Thread.sleep(10000);
-//                new PostAgent("localhost", 9200, "http").
-//                        postData("sysalert-test", "_doc", "event_id", 4, "@timestamp", DateTime.now(), "source_name", "Microsoft-Windows-Sysmon");
-//                System.out.println("posted");
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-        })).start();
         try {
             int totalPosted = 0;
             while (true) {
@@ -55,26 +43,31 @@ public class PostAgentTest {
         }
     }
 
-    @Test
     public void generateEvent(int interval, int eventPerTime, int eventId) {
+        generateEvent(interval, eventPerTime, eventId, 0);
+    }
+
+    @Test
+    public void generateEvent(int interval, int eventPerTime, int eventId, int wait) {
         new Thread(() ->
         {
             try {
-                int totalPosted = 0;
-                while (true) {
-                    Thread.sleep(interval);
-                    for (int i = 0; i < eventPerTime; i++) {
-                        totalPosted += 1;
-                        post.postData("sysalert-test", "_doc",
-                                "event_id", eventId,
-                                "@timestamp", DateTime.now(),
-                                "message", "trying out Elasticsearch",
-                                "source_name", "Microsoft-Windows-Sysmon");
-                    }
-//                System.out.println("totalPosted: " + totalPosted);
-                }
-            } catch (IOException | InterruptedException e) {
+                Thread.sleep(wait);
+            } catch (InterruptedException e) {
                 e.printStackTrace();
+            }
+            while (true) {
+                try {
+                    post.postData("sysalert-test", "_doc",
+                            "event_id", eventId,
+                            "@timestamp", DateTime.now(),
+                            "message", "trying out Elasticsearch",
+                            "source_name", "Microsoft-Windows-Sysmon");
+                    Thread.sleep(interval / eventPerTime);
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
+                }
+
             }
 
         }).start();

@@ -107,10 +107,10 @@ class RuleBuilder {
 
     private static Period periodFromPeriodBean(PeriodBean periodBean) {
         Period period = Period.ZERO;
-        period.plus(Period.days(periodBean.days));
-        period.plus(Period.hours(periodBean.hours));
-        period.plus(Period.minutes(periodBean.minutes));
-        period.plus(Period.seconds(periodBean.seconds));
+        period = period.plus(Period.days(periodBean.days));
+        period = period.plus(Period.hours(periodBean.hours));
+        period = period.plus(Period.minutes(periodBean.minutes));
+        period = period.plus(Period.seconds(periodBean.seconds));
         return period;
     }
 

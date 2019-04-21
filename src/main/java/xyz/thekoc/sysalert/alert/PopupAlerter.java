@@ -3,7 +3,6 @@ package xyz.thekoc.sysalert.alert;
 import xyz.thekoc.sysalert.rule.RuleHit;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.LinkedList;
 

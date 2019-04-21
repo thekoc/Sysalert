@@ -1,12 +1,9 @@
 name: test frequency rule
-type: combination
+type: frequency
 timewindow:
-  minutes: 10
-combination:
+  seconds: 10
+filter:
   - term:
       event_id: 3
-  - term:
-      event_id: 4
-  - term:
-      event_id: 5
+num_events: 2000
 index: sysalert-*

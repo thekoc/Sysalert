@@ -1,4 +1,4 @@
-package xyz.thekoc.sysalert;
+package xyz.thekoc.sysalert.agent;
 
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.index.query.QueryBuilder;
