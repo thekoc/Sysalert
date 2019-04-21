@@ -122,9 +122,6 @@ class RuleBuilder {
 
             newRule.setQueryDelayForAll(queryDelay);
 
-            // TODO: config the alerters
-            newRule.addAlerter(new ConsoleAlerter());
-            newRule.addAlerter(new PopupAlerter());
             return newRule;
         }
         return null;

@@ -11,6 +11,8 @@ import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import xyz.thekoc.sysalert.agent.SearchAgent;
 import xyz.thekoc.sysalert.alert.Alerter;
+import xyz.thekoc.sysalert.alert.ConsoleAlerter;
+import xyz.thekoc.sysalert.alert.PopupAlerter;
 import xyz.thekoc.sysalert.conifg.Config;
 import xyz.thekoc.sysalert.conifg.FieldMissingException;
 import xyz.thekoc.sysalert.conifg.FieldValueException;
@@ -103,7 +105,10 @@ public class Sysalert {
         // TODO: add rules from `rule_folder`
         Config config = Config.getConfig();
         String rulePath = Sysalert.class.getClassLoader().getResource("test_rule.yml").getPath();
-        config.addRule(rulePath);
+        RuleType rule = config.addRule(rulePath);
+
+        rule.addAlerter(new ConsoleAlerter());
+        rule.addAlerter(new PopupAlerter());
         Sysalert s = new Sysalert(config.getHostname(), config.getPort(), config.getScheme());
         s.addRules(config.getRuleTypes());
         s.start();
