@@ -19,8 +19,22 @@ public class RuleHits implements Iterable<RuleHit> {
         ruleHits.add(hit);
     }
 
+    public void extend(RuleHits hits) {
+        for (RuleHit hit: hits) {
+            add(hit);
+        }
+    }
+
+    public void clear() {
+        ruleHits.clear();
+    }
+
     public RuleHit poll() {
         return ruleHits.poll();
+    }
+
+    public int size() {
+        return ruleHits.size();
     }
 
 }

@@ -4,20 +4,18 @@ import com.esotericsoftware.yamlbeans.YamlException;
 import xyz.thekoc.sysalert.Sysalert;
 import xyz.thekoc.sysalert.agent.PostAgentTest;
 import xyz.thekoc.sysalert.conifg.FieldMissingException;
+import xyz.thekoc.sysalert.conifg.FieldValueException;
 import xyz.thekoc.sysalert.conifg.NoSuchRuleException;
 
 import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class SysalertTest {
 
     @org.junit.Test
-    public void start() {
-
-    }
-
-    @org.junit.Test
-    public void main() throws FileNotFoundException, YamlException, FieldMissingException, NoSuchRuleException {
+    public void main() throws FileNotFoundException, YamlException, FieldMissingException, NoSuchRuleException, FieldValueException {
         new PostAgentTest().generateEvent(10000, 88, 4);
         new PostAgentTest().generateEvent(10000, 99, 4, 4000);
         new PostAgentTest().generateEvent(10000, 300, 4, 3000);

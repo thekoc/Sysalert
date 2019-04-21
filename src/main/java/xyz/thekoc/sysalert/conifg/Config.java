@@ -38,7 +38,7 @@ public class Config {
        return configSingletonInstance;
     }
 
-    public void addRule(String pathname) throws FileNotFoundException, YamlException, FieldMissingException, NoSuchRuleException {
+    public void addRule(String pathname) throws FileNotFoundException, YamlException, FieldMissingException, NoSuchRuleException, FieldValueException {
         ruleTypes.add(RuleBuilder.fromFile(pathname));
     }
 

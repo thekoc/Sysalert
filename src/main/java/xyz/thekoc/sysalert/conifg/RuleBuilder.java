@@ -17,49 +17,63 @@ import java.io.FileReader;
 import java.util.*;
 
 class RuleBuilder {
-    static RuleType fromFile(String pathname) throws FileNotFoundException, YamlException, FieldMissingException, NoSuchRuleException {
-        YamlReader rawReader = new YamlReader(new FileReader(pathname));
-        Map rawYamlObject = (Map) rawReader.read();
+    public static void verifyRuleBean(RuleBean ruleBean) throws FieldMissingException, FieldValueException {
+        switch (ruleBean.type) {
+            case "blacklist":
+                if (ruleBean.filter == null) {
+                    throw new FieldMissingException();
+                }
+                break;
+            case "frequency":
+            case "sysmon_frequency":
+                if (
+                        ruleBean.num_events == null ||
+                                ruleBean.timewindow == null ||
+                                ruleBean.filter == null
+                ) {
+                    throw new FieldMissingException();
+                }
+                break;
+            case "combination":
+                if (ruleBean.combination == null) {
+                    throw new FieldMissingException();
+                }
+                break;
+            case "sequence":
+                if (ruleBean.sequence == null) {
+                    throw new FieldMissingException();
+                }
+                break;
+            case "compound":
+                if (ruleBean.operator == null) {
+                    ruleBean.operator = "and";
+                }
+                if (!Arrays.asList("and", "or").contains(ruleBean.operator)) {
+                    throw new FieldValueException();
+                }
 
+                if (ruleBean.rules == null) {
+                    throw new FieldMissingException();
+                } else {
+                    for (Map rule: ruleBean.rules) {
+                        RuleBean subBean = new RuleBean(rule);
+                        verifyRuleBean(subBean);
+                    }
+                }
+                break;
+        }
+    }
+
+    private static RuleType fromYamlObject(Map rawYamlObject) throws FieldMissingException, NoSuchRuleException, FieldValueException {
         Config config = Config.getConfig();
         String index = rawYamlObject.get("index") != null ? (String) rawYamlObject.get("index") : config.getIndex();
         String type = (String) rawYamlObject.get("type");
         if (type == null) {
-            throw new YamlException("type field cannot be null!");
+            throw new FieldMissingException("type field cannot be null!");
         } else if (Arrays.asList("frequency", "sysmon_frequency", "combination", "sequence", "blacklist").contains(type)) {
-            YamlReader reader = new YamlReader(new FileReader(pathname));
-            reader.getConfig().setPropertyDefaultType(RuleBean.class, "timewindow", PeriodBean.class);
-            RuleBean ruleBean = reader.read(RuleBean.class);
+            RuleBean ruleBean = new RuleBean(rawYamlObject);
 
-
-            // Verify the fields
-            switch (ruleBean.type) {
-                case "blacklist":
-                    if (ruleBean.filter == null) {
-                        throw new FieldMissingException();
-                    }
-                    break;
-                case "frequency":
-                case "sysmon_frequency":
-                    if (
-                            ruleBean.num_events == null ||
-                            ruleBean.timewindow == null ||
-                            ruleBean.filter == null
-                    ) {
-                        throw new FieldMissingException();
-                    }
-                    break;
-                case "combination":
-                    if (ruleBean.combination == null) {
-                        throw new FieldMissingException();
-                    }
-                    break;
-                case "sequence":
-                    if (ruleBean.sequence == null) {
-                        throw new FieldMissingException();
-                    }
-                    break;
-            }
+            verifyRuleBean(ruleBean);
 
             Period timeWindow = periodFromPeriodBean(ruleBean.timewindow);
             Period queryDelay = periodFromPeriodBean(ruleBean.query_delay);
@@ -94,6 +108,14 @@ class RuleBuilder {
                     sequenceRuleTypes.addFilterToAll(getFilter(ruleBean.filter));
                     newRule = new CombinationRule(timeWindow, sequenceRuleTypes);
                     break;
+                case "compound":
+                    ArrayList<RuleType> rules = new ArrayList<>();
+                    for (Map rule: ruleBean.rules) {
+                        rules.add(fromYamlObject(rule));
+                    }
+                    newRule = new CompoundRule(CompoundRule.Operator.AND, rules.toArray(new RuleType[0]));
+                    break;
+
                 default:
                     throw new NoSuchRuleException("No such rule: " + ruleBean.type);
             }
@@ -106,6 +128,11 @@ class RuleBuilder {
             return newRule;
         }
         return null;
+    }
+
+    static RuleType fromFile(String pathname) throws FileNotFoundException, YamlException, FieldMissingException, NoSuchRuleException, FieldValueException {
+        YamlReader rawReader = new YamlReader(new FileReader(pathname));
+        return fromYamlObject((Map) rawReader.read());
     }
 
     private static Period periodFromPeriodBean(PeriodBean periodBean) {

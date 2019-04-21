@@ -13,6 +13,7 @@ import xyz.thekoc.sysalert.agent.SearchAgent;
 import xyz.thekoc.sysalert.alert.Alerter;
 import xyz.thekoc.sysalert.conifg.Config;
 import xyz.thekoc.sysalert.conifg.FieldMissingException;
+import xyz.thekoc.sysalert.conifg.FieldValueException;
 import xyz.thekoc.sysalert.conifg.NoSuchRuleException;
 import xyz.thekoc.sysalert.rule.CompoundRule;
 import xyz.thekoc.sysalert.rule.RuleHit;
@@ -97,7 +98,7 @@ public class Sysalert {
         rule.addMatchedEvents(matchedEvents);
     }
 
-    public static void main(String[] args) throws FileNotFoundException, FieldMissingException, YamlException, NoSuchRuleException {
+    public static void main(String[] args) throws FileNotFoundException, FieldMissingException, YamlException, NoSuchRuleException, FieldValueException {
         // TODO: parse command line arguments
         // TODO: add rules from `rule_folder`
         Config config = Config.getConfig();

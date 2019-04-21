@@ -21,10 +21,9 @@ public class MonitoredEventTypes implements Iterable<MonitoredEventType> {
     }
 
     public MonitoredEventTypes(String index, QueryBuilder... filters) {
-        this(Arrays.stream(filters).map((f) -> {
-            return new MonitoredEventType(index, f);
-        }).collect(Collectors.toList()));
+        this(Arrays.stream(filters).map((f) -> new MonitoredEventType(index, f)).collect(Collectors.toList()));
     }
+
 
     public void addFilterToAll(QueryBuilder filter) {
         if (filter == null) {
@@ -37,6 +36,12 @@ public class MonitoredEventTypes implements Iterable<MonitoredEventType> {
 
     public void add(MonitoredEventType monitoredEventType) {
         monitoredEventTypes.add(monitoredEventType);
+    }
+
+    public void extend(MonitoredEventTypes monitoredEventTypes) {
+        for (MonitoredEventType monitoredEventType: monitoredEventTypes) {
+            add(monitoredEventType);
+        }
     }
 
     public ArrayList<MonitoredEventType> getMonitoredEventTypes() {

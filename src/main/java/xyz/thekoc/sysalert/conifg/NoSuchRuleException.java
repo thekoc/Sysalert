@@ -1,7 +1,8 @@
 package xyz.thekoc.sysalert.conifg;
 
 public class NoSuchRuleException extends Exception {
-    NoSuchRuleException(String s) {
-        super(s);
+    NoSuchRuleException(){}
+    NoSuchRuleException(String errorMessage) {
+        super(errorMessage);
     }
 }
