@@ -8,8 +8,6 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.joda.time.Period;
 import xyz.thekoc.sysalert.MonitoredEventType;
 import xyz.thekoc.sysalert.MonitoredEventTypes;
-import xyz.thekoc.sysalert.alert.ConsoleAlerter;
-import xyz.thekoc.sysalert.alert.PopupAlerter;
 import xyz.thekoc.sysalert.rule.*;
 
 import java.io.FileNotFoundException;
@@ -70,7 +68,7 @@ class RuleBuilder {
         String type = (String) rawYamlObject.get("type");
         if (type == null) {
             throw new FieldMissingException("type field cannot be null!");
-        } else if (Arrays.asList("frequency", "sysmon_frequency", "combination", "sequence", "blacklist").contains(type)) {
+        } else if (Arrays.asList("frequency", "sysmon_frequency", "combination", "sequence", "blacklist", "compound").contains(type)) {
             RuleBean ruleBean = new RuleBean(rawYamlObject);
 
             verifyRuleBean(ruleBean);
@@ -113,7 +111,16 @@ class RuleBuilder {
                     for (Map rule: ruleBean.rules) {
                         rules.add(fromYamlObject(rule));
                     }
-                    newRule = new CompoundRule(CompoundRule.Operator.AND, rules.toArray(new RuleType[0]));
+                    switch (ruleBean.operator) {
+                        case "and":
+                            newRule = new CompoundRule(CompoundRule.Operator.AND, rules.toArray(new RuleType[0]));
+                            break;
+                        case "or":
+                            newRule = new CompoundRule(CompoundRule.Operator.OR, rules.toArray(new RuleType[0]));
+                            break;
+                        default:
+                            throw new FieldValueException();
+                    }
                     break;
 
                 default:
@@ -123,8 +130,9 @@ class RuleBuilder {
             newRule.setQueryDelayForAll(queryDelay);
 
             return newRule;
+        } else {
+            throw new NoSuchRuleException("No such rule: " + type);
         }
-        return null;
     }
 
     static RuleType fromFile(String pathname) throws FileNotFoundException, YamlException, FieldMissingException, NoSuchRuleException, FieldValueException {

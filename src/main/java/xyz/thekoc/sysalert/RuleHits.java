@@ -1,4 +1,4 @@
-package xyz.thekoc.sysalert.rule;
+package xyz.thekoc.sysalert;
 
 import java.util.Iterator;
 import java.util.LinkedList;

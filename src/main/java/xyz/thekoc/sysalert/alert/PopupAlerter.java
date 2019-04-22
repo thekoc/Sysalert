@@ -1,6 +1,6 @@
 package xyz.thekoc.sysalert.alert;
 
-import xyz.thekoc.sysalert.rule.RuleHit;
+import xyz.thekoc.sysalert.RuleHit;
 
 import java.io.IOException;
 import java.util.Arrays;

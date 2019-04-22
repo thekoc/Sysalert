@@ -9,7 +9,11 @@ public class RuleBean {
         type = (String) object.get("type");
         name = (String) object.get("name");
         index = (String) object.get("index");
-        num_events = Integer.valueOf((String) object.get("num_events"));
+        if (object.get("num_events") != null) {
+            num_events = Integer.valueOf((String) object.get("num_events"));
+        } else {
+            num_events = null;
+        }
         timewindow = new PeriodBean((Map) object.get("timewindow"));
         query_delay = new PeriodBean((Map) object.get("query_delay"));
         filter = (List<Map>) object.get("filter");

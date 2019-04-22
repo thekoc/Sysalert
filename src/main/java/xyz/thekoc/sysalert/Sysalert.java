@@ -11,14 +11,9 @@ import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import xyz.thekoc.sysalert.agent.SearchAgent;
 import xyz.thekoc.sysalert.alert.Alerter;
-import xyz.thekoc.sysalert.alert.ConsoleAlerter;
-import xyz.thekoc.sysalert.alert.PopupAlerter;
-import xyz.thekoc.sysalert.conifg.Config;
 import xyz.thekoc.sysalert.conifg.FieldMissingException;
 import xyz.thekoc.sysalert.conifg.FieldValueException;
 import xyz.thekoc.sysalert.conifg.NoSuchRuleException;
-import xyz.thekoc.sysalert.rule.CompoundRule;
-import xyz.thekoc.sysalert.rule.RuleHit;
 import xyz.thekoc.sysalert.rule.RuleType;
 
 import java.io.FileNotFoundException;
@@ -60,16 +55,22 @@ public class Sysalert {
         }
     }
 
+    private Interval updateQueryInterval(MonitoredEventType eventType) {
+        Interval queryInterval;
+        if (eventType.getLastQueryInterval() == null) {
+            queryInterval = new Interval(startDateTime.minus(eventType.getQueryDelay()), DateTime.now().minus(eventType.getQueryDelay()));
+        } else {
+            queryInterval = new Interval(eventType.getLastQueryInterval().getEnd(), DateTime.now().minus(eventType.getQueryDelay()));
+        }
+        eventType.setLastQueryInterval(queryInterval);
+        return queryInterval;
+    }
+
     private void runAllRules() {
         for (RuleType rule: rules) {
             for (MonitoredEventType eventType: rule.getMonitoredEventTypes()) {
-                Interval queryInterval;
-                if (eventType.getLastQueryInterval() == null) {
-                    queryInterval = new Interval(startDateTime.minus(eventType.getQueryDelay()), DateTime.now().minus(eventType.getQueryDelay()));
-                } else {
-                    queryInterval = new Interval(eventType.getLastQueryInterval().getEnd(), DateTime.now().minus(eventType.getQueryDelay()));
-                }
-                runQuery(rule, eventType, queryInterval);
+                Interval newInterval = updateQueryInterval(eventType);
+                runQuery(rule, eventType, newInterval);
                 RuleHit ruleHit = rule.getRuleHits().poll();
                 while (ruleHit != null) {
                     for (Alerter alerter: rule.getAlerters()) {
@@ -77,7 +78,6 @@ public class Sysalert {
                     }
                     ruleHit = rule.getRuleHits().poll();
                 }
-                eventType.setLastQueryInterval(queryInterval);
             }
 
 
@@ -85,6 +85,7 @@ public class Sysalert {
     }
 
     private void runQuery(RuleType rule, MonitoredEventType eventType, Interval queryInterval) {
+        // TODO: Support scroll
         String startTime = queryInterval.getStart().toString(eventType.getDateTimeFormatter());
         String endTime = queryInterval.getEnd().toString(eventType.getDateTimeFormatter());
 
@@ -101,16 +102,6 @@ public class Sysalert {
     }
 
     public static void main(String[] args) throws FileNotFoundException, FieldMissingException, YamlException, NoSuchRuleException, FieldValueException {
-        // TODO: parse command line arguments
-        // TODO: add rules from `rule_folder`
-        Config config = Config.getConfig();
-        String rulePath = Sysalert.class.getClassLoader().getResource("test_rule.yml").getPath();
-        RuleType rule = config.addRule(rulePath);
 
-        rule.addAlerter(new ConsoleAlerter());
-        rule.addAlerter(new PopupAlerter());
-        Sysalert s = new Sysalert(config.getHostname(), config.getPort(), config.getScheme());
-        s.addRules(config.getRuleTypes());
-        s.start();
     }
 }

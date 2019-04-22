@@ -1,9 +1,22 @@
-name: test frequency rule
-type: frequency
-timewindow:
-  seconds: 10
-filter:
-  - term:
-      event_id: 3
-num_events: 2000
-index: sysalert-*
+type: compound
+operator: and
+rules:
+  - name: frequency rule test
+    type: frequency
+    timewindow:
+      seconds: 10
+    filter:
+      - term:
+          event_id: 3
+    num_events: 2000
+    index: sysalert-*
+  - name: combination rule test
+    type: combination
+    timewindow:
+      seconds: 10
+    combination:
+      - term:
+          event_id: 3
+      - term:
+          event_id: 8
+    index: sysalert-*

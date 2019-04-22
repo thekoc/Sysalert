@@ -22,7 +22,6 @@ public class FrequencyRule extends RuleType {
 
     @Override
     public void addMatchedEvents(List<MatchedEvent> matchedEvents) {
-        System.out.println("hit num: ".concat(String.valueOf(matchedEvents.size())));
         for (MatchedEvent event: matchedEvents) {
             this.matchedEvents.add(event);
             while (this.matchedEvents.size() > 0 &&

@@ -1,15 +1,11 @@
 package xyz.thekoc.sysalert.rule;
 
 import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.search.SearchHit;
-import org.joda.time.DateTime;
-import org.joda.time.Interval;
 import org.joda.time.Period;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import xyz.thekoc.sysalert.MatchedEvent;
 import xyz.thekoc.sysalert.MonitoredEventType;
 import xyz.thekoc.sysalert.MonitoredEventTypes;
+import xyz.thekoc.sysalert.RuleHits;
 import xyz.thekoc.sysalert.alert.Alerter;
 
 import java.util.ArrayList;

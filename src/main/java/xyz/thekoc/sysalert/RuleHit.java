@@ -1,4 +1,4 @@
-package xyz.thekoc.sysalert.rule;
+package xyz.thekoc.sysalert;
 
 public class RuleHit {
     public String message;

@@ -2,7 +2,7 @@ package xyz.thekoc.sysalert.alert;
 
 import xyz.thekoc.sysalert.agent.PostAgent;
 import xyz.thekoc.sysalert.conifg.Config;
-import xyz.thekoc.sysalert.rule.RuleHit;
+import xyz.thekoc.sysalert.RuleHit;
 
 
 public class ElasticsearchAlerter extends Alerter{
