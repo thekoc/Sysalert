@@ -1,6 +1,7 @@
 package xyz.thekoc.sysalert;
 
 import com.esotericsoftware.yamlbeans.YamlException;
+import org.apache.commons.cli.*;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -11,6 +12,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import xyz.thekoc.sysalert.agent.SearchAgent;
 import xyz.thekoc.sysalert.alert.Alerter;
+import xyz.thekoc.sysalert.conifg.Config;
 import xyz.thekoc.sysalert.conifg.FieldMissingException;
 import xyz.thekoc.sysalert.conifg.FieldValueException;
 import xyz.thekoc.sysalert.conifg.NoSuchRuleException;
@@ -102,6 +104,11 @@ public class Sysalert {
     }
 
     public static void main(String[] args) throws FileNotFoundException, FieldMissingException, YamlException, NoSuchRuleException, FieldValueException {
+        Config.init(args);
+        Config config = Config.getConfig();
 
+        Sysalert s = new Sysalert(config.getHostname(), config.getPort(), config.getScheme());
+        s.addRules(config.getRuleTypes());
+        s.start();
     }
 }

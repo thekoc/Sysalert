@@ -13,7 +13,7 @@ public class FrequencyRule extends RuleType {
     private Queue<MatchedEvent> matchedEvents = new LinkedList<>();
     private Period timeWindow;
     private int threshold;
-    public FrequencyRule(String index, Period timeWindow, QueryBuilder filter, int threshold)  {
+    public FrequencyRule(String index, Period timeWindow, QueryBuilder filter, int threshold) {
         super(index, filter, threshold);
         this.threshold = threshold;
         this.timeWindow = timeWindow;

@@ -2,6 +2,7 @@ package xyz.thekoc.sysalert.conifg;
 
 import com.esotericsoftware.yamlbeans.YamlException;
 import com.esotericsoftware.yamlbeans.YamlReader;
+import org.apache.commons.cli.*;
 import xyz.thekoc.sysalert.rule.RuleType;
 
 import java.io.FileNotFoundException;
@@ -29,6 +30,37 @@ public class Config {
 
     public static void init(String pathname) throws FileNotFoundException {
         configSingletonInstance = new Config(pathname);
+    }
+
+    public static void init(String[] argv) throws FileNotFoundException, FieldValueException, YamlException, NoSuchRuleException, FieldMissingException {
+        Options options = new Options();
+
+        Option configPathOption = Option.builder("c").longOpt("config").required().
+                desc("Config path").build();
+        options.addOption(configPathOption);
+
+        Option rulePathOption = Option.builder("r").longOpt("rule").hasArgs().desc("Rule path").build();
+        options.addOption(rulePathOption);
+
+        CommandLineParser parser = new DefaultParser();
+        HelpFormatter formatter = new HelpFormatter();
+        CommandLine cmd;
+        try {
+            cmd = parser.parse(options, argv);
+        } catch (ParseException e) {
+            System.out.println(e.getMessage());
+            formatter.printHelp("utility-name", options);
+
+            System.exit(1);
+            return;
+        }
+
+        String configPath = cmd.getOptionValue("config");
+        String[] rulePaths = cmd.getOptionValues("rule");
+        configSingletonInstance = new Config(configPath);
+        for (String rulePath: rulePaths) {
+            configSingletonInstance.addRule(rulePath);
+        }
     }
 
     public static Config getConfig() {
