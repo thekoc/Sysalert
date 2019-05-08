@@ -63,12 +63,18 @@ class RuleBuilder {
     }
 
     private static RuleType fromYamlObject(Map rawYamlObject) throws FieldMissingException, NoSuchRuleException, FieldValueException {
+        if (rawYamlObject == null) {
+            throw new FieldMissingException("All fields are missing!");
+        }
         Config config = Config.getConfig();
-        String index = rawYamlObject.get("index") != null ? (String) rawYamlObject.get("index") : config.getIndex();
         String type = (String) rawYamlObject.get("type");
         if (type == null) {
             throw new FieldMissingException("type field cannot be null!");
         } else if (Arrays.asList("frequency", "sysmon_frequency", "combination", "sequence", "blacklist", "compound").contains(type)) {
+            String index = rawYamlObject.get("index") != null ? (String) rawYamlObject.get("index") : config.getIndex();
+            if (!type.equals("compound") && index == null) {
+                throw new FieldMissingException("Index must not be empty!");
+            }
             RuleBean ruleBean = new RuleBean(rawYamlObject);
 
             verifyRuleBean(ruleBean);
@@ -104,7 +110,7 @@ class RuleBuilder {
                         sequenceRuleTypes.add(new MonitoredEventType(index, getFilter(Collections.singletonList(filter))));
                     }
                     sequenceRuleTypes.addFilterToAll(getFilter(ruleBean.filter));
-                    newRule = new CombinationRule(timeWindow, sequenceRuleTypes);
+                    newRule = new SequenceRule(timeWindow, sequenceRuleTypes);
                     break;
                 case "compound":
                     ArrayList<RuleType> rules = new ArrayList<>();

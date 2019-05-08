@@ -1,0 +1,11 @@
+name: blacklist
+type: blacklist
+filter:
+  - term:
+      event_id: 1
+  - regexp:
+      event_data.ParentImage: .*outlook.exe
+  - regexp:
+      event_data.Image: .*iexplore.exe
+index: winlogbeat-*
+

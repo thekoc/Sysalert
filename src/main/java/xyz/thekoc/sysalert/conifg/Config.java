@@ -3,13 +3,13 @@ package xyz.thekoc.sysalert.conifg;
 import com.esotericsoftware.yamlbeans.YamlException;
 import com.esotericsoftware.yamlbeans.YamlReader;
 import org.apache.commons.cli.*;
+import org.joda.time.Period;
 import xyz.thekoc.sysalert.rule.RuleType;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Config {
     private ConfigBean configBean = new ConfigBean();
@@ -74,6 +74,11 @@ public class Config {
         RuleType rule = RuleBuilder.fromFile(pathname);
         ruleTypes.add(rule);
         return rule;
+    }
+
+    public Period getRunEvery() {
+        PeriodBean runEvery = configBean.run_every;
+        return new Period(runEvery.hours, runEvery.minutes, runEvery.seconds, 0);
     }
 
     public String getHostname() {

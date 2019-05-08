@@ -1,0 +1,13 @@
+name: seqeunce test
+type: sequence
+sequence:
+  - term:
+      event_id: 1
+  - term:
+      event_id: 2
+  - term:
+      event_id: 3
+timewindow:
+  minutes: 15
+index: sysalert-test
+

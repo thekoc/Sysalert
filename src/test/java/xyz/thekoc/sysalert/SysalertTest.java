@@ -1,7 +1,7 @@
 package xyz.thekoc.sysalert;
 
 import com.esotericsoftware.yamlbeans.YamlException;
-import xyz.thekoc.sysalert.Sysalert;
+import org.junit.Test;
 import xyz.thekoc.sysalert.agent.PostAgentTest;
 import xyz.thekoc.sysalert.alert.ConsoleAlerter;
 import xyz.thekoc.sysalert.alert.PopupAlerter;
@@ -12,14 +12,13 @@ import xyz.thekoc.sysalert.conifg.NoSuchRuleException;
 import xyz.thekoc.sysalert.rule.RuleType;
 
 import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class SysalertTest {
+    public Sysalert sysalert;
 
-    @org.junit.Test
-    public void main() throws FileNotFoundException, YamlException, FieldMissingException, NoSuchRuleException, FieldValueException {
+    @Test
+    public void eventTest() throws FieldValueException, FileNotFoundException, YamlException, NoSuchRuleException, FieldMissingException {
         new PostAgentTest().generateEvent(10000, 88, 4);
         new PostAgentTest().generateEvent(10000, 99, 4, 4000);
         new PostAgentTest().generateEvent(10000, 300, 4, 3000);
@@ -42,8 +41,21 @@ public class SysalertTest {
 
         rule.addAlerter(new ConsoleAlerter());
         rule.addAlerter(new PopupAlerter());
-        Sysalert s = new Sysalert(config.getHostname(), config.getPort(), config.getScheme());
-        s.addRules(config.getRuleTypes());
-        s.start();
+        sysalert = new Sysalert(config);
+        sysalert.start();
     }
+
+    @Test
+    public void main() throws FileNotFoundException, YamlException, FieldMissingException, NoSuchRuleException, FieldValueException {
+        Config config = Config.getConfig();
+        String rulePath = SysalertTest.class.getClassLoader().getResource("macro.yml").getPath();
+        RuleType rule = config.addRule(rulePath);
+
+        rule.addAlerter(new ConsoleAlerter());
+        rule.addAlerter(new PopupAlerter());
+        sysalert = new Sysalert(config);
+        sysalert.start();
+    }
+
+
 }

@@ -11,7 +11,6 @@ public class PostAgentTest {
 
     @Test
     public void initIndex() {
-        System.out.println(123);
         try {
             post.initIndex("sysalert-test", "_doc",
                     "message", "type=text", "@timestamp", "type=date",
@@ -21,24 +20,14 @@ public class PostAgentTest {
         }
     }
 
-
-    @Test
-    public void postData() {
+    public void postData(int eventId, String message) {
         try {
-            int totalPosted = 0;
-            while (true) {
-                for (int i = 0; i < 10; i++) {
-                    totalPosted += 1;
-                    post.postData("sysalert-test", "_doc",
-                            "event_id", 3,
-                            "@timestamp", DateTime.now(),
-                            "message", "trying out Elasticsearch",
-                            "source_name", "Microsoft-Windows-Sysmon");
-                }
-//                System.out.println("totalPosted: " + totalPosted);
-                Thread.sleep(1000);
-            }
-        } catch (IOException | InterruptedException e) {
+            post.postData("sysalert-test", "_doc",
+                    "event_id", eventId,
+                    "@timestamp", DateTime.now(),
+                    "message", message,
+                    "source_name", "Microsoft-Windows-Sysmon");
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -47,7 +36,6 @@ public class PostAgentTest {
         generateEvent(interval, eventPerTime, eventId, 0);
     }
 
-    @Test
     public void generateEvent(int interval, int eventPerTime, int eventId, int wait) {
         new Thread(() ->
         {
@@ -72,4 +60,6 @@ public class PostAgentTest {
 
         }).start();
     }
+
+
 }
