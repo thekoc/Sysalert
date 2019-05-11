@@ -19,7 +19,11 @@ public class RuleBean {
         } else {
             timewindow = null;
         }
-        query_delay = new PeriodBean((Map) object.get("query_delay"));
+        if (object.get("query_delay") != null) {
+            query_delay = new PeriodBean((Map) object.get("query_delay"));
+        } else {
+            query_delay = null;
+        }
         filter = (List<Map>) object.get("filter");
         blacklist = (List<Map>) object.get("blacklist");
         sequence = (List<Map>) object.get("sequence");

@@ -80,7 +80,10 @@ class RuleBuilder {
             verifyRuleBean(ruleBean);
 
             Period timeWindow = periodFromPeriodBean(ruleBean.timewindow);
-            Period queryDelay = periodFromPeriodBean(ruleBean.query_delay);
+            Period queryDelay = null;
+            if (ruleBean.query_delay != null) {
+                queryDelay = periodFromPeriodBean(ruleBean.query_delay);
+            }
             RuleType newRule;
 
             switch (ruleBean.type) {
@@ -141,7 +144,9 @@ class RuleBuilder {
                     throw new NoSuchRuleException("No such rule: " + ruleBean.type);
             }
 
-            newRule.setQueryDelayForAll(queryDelay);
+            if (queryDelay != null) {
+                newRule.setQueryDelayForAll(queryDelay);
+            }
 
             return newRule;
         } else {

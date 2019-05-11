@@ -34,8 +34,7 @@ public class CompoundRule extends RuleType {
     public void addMatchedEvents(List<MatchedEvent> matchedEvents) {
         for (MatchedEvent matchedEvent: matchedEvents) {
             for (RuleType rule: rules) {
-                if (rule.getMonitoredEventTypes().contains(
-                        matchedEvent.getMonitoredEventType()))
+                if (rule.getMonitoredEventTypes().contains(matchedEvent.getMonitoredEventType()))
                 rule.addMatchedEvents(Collections.singletonList(matchedEvent));
             }
         }

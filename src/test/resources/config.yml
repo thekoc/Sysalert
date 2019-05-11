@@ -1,5 +1,5 @@
 es_host: localhost
 es_port: 9200
 run_every:
-  seconds: 2
+  seconds: 5
 index: winlogbeat-*

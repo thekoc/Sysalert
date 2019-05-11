@@ -2,19 +2,38 @@ name: ransom
 type: compound
 rules:
   - name: ransom blacklist
-  type: blacklist
-  blacklist:
-    - filter:
-      term:
-        event_id: 2
-    - filter:
-        regexp:
-          event_data.TargetFilename: .*(\\.402|\\.4035|\\.4090|\\.4091|\\.452|\\.707|\\.725|\\.726|\\.911|\\.f41o1|\\.2cXpCihgsVxB3|\\.3ncrypt3d|\\.au1crypt|\\.BONUM|\\.BRT92|\\.BUSH|\\.C8B089F|\\.CHAK|\\.clinTON|\\.crypt|\\.FIX|\\.fuck|\\.goro|\\.gotham|\\.granny|\\.happ|\\.lpcrestore|\\.keepcalm|\\.LIN|\\.MAKB|\\.medal|\\.mtk118|\\.needdecrypt|\\.needkeys|\\.NIGGA|\\.nWcrypt|\\.paycyka|\\.pizdec|\\.pscrypte|\\.ReaGAN|\\.rubmblegoodboy|\\.s1crypt|\\.scorp|\\.sea|\\.skunk|\\.Trump|\\.UNLIS|\\.vdul|\\.wallet|\\.write_|\\.YAYA|\\.zuzya|.\\.doc|\\.xlsm|\\.AK47|\\.STN|\\.coded|\\.cerber3|\\.asasin|\\.ykcol)
+    type: blacklist
+    blacklist:
+      - filter:
+          - term:
+              event_id: 2
+      - filter:
+          - regexp:
+              event_data.TargetFilename: .*(\.402|\.4035|\.4090|\.4091|\.452|\.707|\.725|\.726|\.911|\.f41o1|\.2cXpCihgsVxB3|\.3ncrypt3d|\.au1crypt|\.BONUM|\.BRT92|\.BUSH|\.C8B089F|\.CHAK|\.clinTON|\.crypt|\.FIX|\.fuck|\.goro|\.gotham|\.granny|\.happ|\.lpcrestore|\.keepcalm|\.LIN|\.MAKB|\.medal|\.mtk118|\.needdecrypt|\.needkeys|\.NIGGA|\.nWcrypt|\.paycyka|\.pizdec|\.pscrypte|\.ReaGAN|\.rubmblegoodboy|\.s1crypt|\.scorp|\.sea|\.skunk|\.Trump|\.UNLIS|\.vdul|\.wallet|\.write_|\.YAYA|\.zuzya|.\.doc|\.xlsm|\.AK47|\.STN|\.coded|\.cerber3|\.asasin|\.ykcol)
+    query_delay:
+      seconds: 10
   - name: ransom frequency
-      type: frequency
-      filter:
-        term:
+    type: frequency
+    filter:
+      - term:
           event_id: 11
-      timewindow:
-        minutes: 1
-      number_events: 240
+    timewindow:
+      minutes: 1
+    num_events: 240
+    query_delay:
+      seconds: 10
+operator: or
+
+
+
+#name: ransom blacklist
+#type: blacklist
+#blacklist:
+#  - filter:
+#      - term:
+#          event_id: 2
+#  - filter:
+#      - regexp:
+#          event_data.TargetFilename: .*(\.402|\.4035|\.4090|\.4091|\.452|\.707|\.725|\.726|\.911|\.f41o1|\.2cXpCihgsVxB3|\.3ncrypt3d|\.au1crypt|\.BONUM|\.BRT92|\.BUSH|\.C8B089F|\.CHAK|\.clinTON|\.crypt|\.FIX|\.fuck|\.goro|\.gotham|\.granny|\.happ|\.lpcrestore|\.keepcalm|\.LIN|\.MAKB|\.medal|\.mtk118|\.needdecrypt|\.needkeys|\.NIGGA|\.nWcrypt|\.paycyka|\.pizdec|\.pscrypte|\.ReaGAN|\.rubmblegoodboy|\.s1crypt|\.scorp|\.sea|\.skunk|\.Trump|\.UNLIS|\.vdul|\.wallet|\.write_|\.YAYA|\.zuzya|.\.doc|\.xlsm|\.AK47|\.STN|\.coded|\.cerber3|\.asasin|\.ykcol)
+#query_delay:
+#  seconds: 10
