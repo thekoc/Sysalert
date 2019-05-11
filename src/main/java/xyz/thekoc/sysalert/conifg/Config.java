@@ -10,25 +10,22 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Config {
     private ConfigBean configBean = new ConfigBean();
     private ArrayList<RuleType> ruleTypes = new ArrayList<>();
     private static Config configSingletonInstance = null;
 
-    private Config(String pathname) throws FileNotFoundException {
+    private Config(String pathname) throws FileNotFoundException, YamlException {
         YamlReader reader = new YamlReader(new FileReader(pathname));
-        try {
-            configBean = reader.read(ConfigBean.class);
-        } catch (YamlException e) {
-            e.printStackTrace();
-        }
+        configBean = new ConfigBean((Map) reader.read());
     }
 
     private Config() {
     }
 
-    public static void init(String pathname) throws FileNotFoundException {
+    public static void init(String pathname) throws FileNotFoundException, YamlException {
         configSingletonInstance = new Config(pathname);
     }
 

@@ -1,4 +1,5 @@
 es_host: localhost
-es_port: 9300
+es_port: 9200
 run_every:
-  seconds: 10
+  seconds: 2
+index: winlogbeat-*

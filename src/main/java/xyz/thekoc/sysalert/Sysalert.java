@@ -84,7 +84,7 @@ public class Sysalert {
             ArrayList<MatchedEvent> matchedEvents = new ArrayList<>();
             for (MonitoredEventType eventType: rule.getMonitoredEventTypes()) {
                 Interval newInterval = updateQueryInterval(eventType);
-                matchedEvents.addAll(runQuery(rule, eventType, newInterval));
+                matchedEvents.addAll(runQuery(eventType, newInterval));
 
             }
 
@@ -100,7 +100,7 @@ public class Sysalert {
         }
     }
 
-    private ArrayList<MatchedEvent> runQuery(RuleType rule, MonitoredEventType eventType, Interval queryInterval) {
+    private ArrayList<MatchedEvent> runQuery(MonitoredEventType eventType, Interval queryInterval) {
         // TODO: Support scroll
         String startTime = queryInterval.getStart().toString(eventType.getDateTimeFormatter());
         String endTime = queryInterval.getEnd().toString(eventType.getDateTimeFormatter());

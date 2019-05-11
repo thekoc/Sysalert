@@ -8,6 +8,7 @@ import xyz.thekoc.sysalert.MonitoredEventTypes;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 
 public class SequenceRule extends RuleType {
@@ -27,6 +28,8 @@ public class SequenceRule extends RuleType {
     @Override
     public void addMatchedEvents(List<MatchedEvent> matchedEvents) {
         for (MatchedEvent event: matchedEvents) {
+            int eventId = (Integer) event.getSearchHit().getSourceAsMap().get("event_id");
+            System.out.println("Event id" + String.valueOf(eventId));
             this.matchedEvents.add(event);
             while (shouldRemoveHead(event)) {
                 this.matchedEvents.poll();

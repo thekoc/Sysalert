@@ -33,12 +33,12 @@ class RuleBuilder {
                 }
                 break;
             case "combination":
-                if (ruleBean.combination == null) {
+                if (ruleBean.combination == null || ruleBean.timewindow == null) {
                     throw new FieldMissingException();
                 }
                 break;
             case "sequence":
-                if (ruleBean.sequence == null) {
+                if (ruleBean.sequence == null || ruleBean.timewindow == null) {
                     throw new FieldMissingException();
                 }
                 break;
@@ -98,16 +98,18 @@ class RuleBuilder {
                     break;
                 case "combination":
                     MonitoredEventTypes combinationRuleTypes = new MonitoredEventTypes();
-                    for (Map filter: ruleBean.combination) {
-                        combinationRuleTypes.add(new MonitoredEventType(index, getFilter(Collections.singletonList(filter))));
+                    for (Map item: ruleBean.combination) {
+                        List filter = (List) item.get("filter");
+                        combinationRuleTypes.add(new MonitoredEventType(index, getFilter(filter)));
                     }
                     combinationRuleTypes.addFilterToAll(getFilter(ruleBean.filter));
                     newRule = new CombinationRule(timeWindow, combinationRuleTypes);
                     break;
                 case "sequence":
                     MonitoredEventTypes sequenceRuleTypes = new MonitoredEventTypes();
-                    for (Map filter: ruleBean.sequence) {
-                        sequenceRuleTypes.add(new MonitoredEventType(index, getFilter(Collections.singletonList(filter))));
+                    for (Map item: ruleBean.sequence) {
+                        List filter = (List) item.get("filter");
+                        sequenceRuleTypes.add(new MonitoredEventType(index, getFilter(filter)));
                     }
                     sequenceRuleTypes.addFilterToAll(getFilter(ruleBean.filter));
                     newRule = new SequenceRule(timeWindow, sequenceRuleTypes);
@@ -148,11 +150,15 @@ class RuleBuilder {
 
     private static Period periodFromPeriodBean(PeriodBean periodBean) {
         Period period = Period.ZERO;
-        period = period.plus(Period.days(periodBean.days));
-        period = period.plus(Period.hours(periodBean.hours));
-        period = period.plus(Period.minutes(periodBean.minutes));
-        period = period.plus(Period.seconds(periodBean.seconds));
-        return period;
+        if (periodBean == null) {
+            return period;
+        } else {
+            period = period.plus(Period.days(periodBean.days));
+            period = period.plus(Period.hours(periodBean.hours));
+            period = period.plus(Period.minutes(periodBean.minutes));
+            period = period.plus(Period.seconds(periodBean.seconds));
+            return period;
+        }
     }
 
     private static QueryBuilder getFilter(List filter) {

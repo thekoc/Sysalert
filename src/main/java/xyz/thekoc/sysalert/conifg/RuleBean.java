@@ -14,7 +14,11 @@ public class RuleBean {
         } else {
             num_events = null;
         }
-        timewindow = new PeriodBean((Map) object.get("timewindow"));
+        if (object.get("timewindow") != null) {
+            timewindow = new PeriodBean((Map) object.get("timewindow"));
+        } else {
+            timewindow = null;
+        }
         query_delay = new PeriodBean((Map) object.get("query_delay"));
         filter = (List<Map>) object.get("filter");
         sequence = (List<Map>) object.get("sequence");

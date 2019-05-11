@@ -1,11 +1,35 @@
-name: blacklist
-type: blacklist
-filter:
-  - term:
-      event_id: 1
-  - regexp:
-      event_data.ParentImage: .*outlook.exe
-  - regexp:
-      event_data.Image: .*iexplore.exe
-index: winlogbeat-*
-
+name: macro hunt
+type: sequence
+sequence:
+  - filter:
+      - term:
+          event_id: 1
+      - regexp:
+          event_data.ParentImage.keyword: .*OUTLOOK\.EXE
+      - regexp:
+          event_data.Image.keyword: .*iexplore\.exe
+  - filter:
+      - term:
+          event_id: 11
+      - regexp:
+          event_data.TargetFilename.keyword: .*\.(docx|doc|docm)
+      - regexp:
+          event_data.Image.keyword: .*iexplore\.exe
+  - filter:
+      - term:
+          event_id: 1
+      - regexp:
+          event_data.CommandLine.keyword: .*(docx|doc|docm).*/o.*
+      - regexp:
+          event_data.Image.keyword: .*WINWORD\.EXE
+  - filter:
+      - term:
+          event_id: 1
+      - term:
+          event_data.ParentImage: office
+      - regexp:
+          event_data.Image: .*(wscript.exe|cscript.exe|cmd.exe|powershell.exe)
+timewindow:
+  minutes: 10
+query_delay:
+  seconds: 10
