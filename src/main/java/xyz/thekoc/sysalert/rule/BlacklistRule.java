@@ -8,6 +8,10 @@ import java.util.List;
 
 public class BlacklistRule extends RuleType {
 
+    public BlacklistRule(MonitoredEventTypes monitoredEventTypes) {
+        super(monitoredEventTypes);
+    }
+
     public BlacklistRule(String index, QueryBuilder... filters) {
         super(index, filters);
     }

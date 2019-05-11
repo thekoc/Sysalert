@@ -18,7 +18,7 @@ class RuleBuilder {
     public static void verifyRuleBean(RuleBean ruleBean) throws FieldMissingException, FieldValueException {
         switch (ruleBean.type) {
             case "blacklist":
-                if (ruleBean.filter == null) {
+                if (ruleBean.blacklist == null) {
                     throw new FieldMissingException();
                 }
                 break;
@@ -85,7 +85,13 @@ class RuleBuilder {
 
             switch (ruleBean.type) {
                 case "blacklist":
-                    newRule = new BlacklistRule(index, getFilter(ruleBean.filter));
+                    MonitoredEventTypes blacklistRuleTypes = new MonitoredEventTypes();
+                    for (Map item: ruleBean.blacklist) {
+                        List filter = (List) item.get("filter");
+                        blacklistRuleTypes.add(new MonitoredEventType(index, getFilter(filter)));
+                    }
+                    blacklistRuleTypes.addFilterToAll(getFilter(ruleBean.filter));
+                    newRule = new BlacklistRule(blacklistRuleTypes);
                     break;
                 case "whitelist":
                     newRule = new WhitelistRule(index, getFilter(ruleBean.filter));

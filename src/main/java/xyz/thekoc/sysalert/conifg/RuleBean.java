@@ -21,6 +21,7 @@ public class RuleBean {
         }
         query_delay = new PeriodBean((Map) object.get("query_delay"));
         filter = (List<Map>) object.get("filter");
+        blacklist = (List<Map>) object.get("blacklist");
         sequence = (List<Map>) object.get("sequence");
         combination = (List<Map>) object.get("combination");
         operator = (String) object.get("operator");
@@ -38,6 +39,7 @@ public class RuleBean {
     public PeriodBean timewindow;
     public PeriodBean query_delay;
     public List<Map> filter;
+    public List<Map> blacklist;
     public List<Map> sequence;
     public List<Map> combination;
     public String operator;

@@ -1,0 +1,10 @@
+name: blacklist test
+type: blacklist
+blacklist:
+  - filter:
+      - term:
+          event_id: 11
+      - regexp:
+          event_data.TargetFilename.keyword: .*xxxyyy.*
+query_delay:
+  seconds: 10

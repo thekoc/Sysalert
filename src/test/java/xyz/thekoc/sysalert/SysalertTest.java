@@ -49,7 +49,7 @@ public class SysalertTest {
     public void main() throws FileNotFoundException, YamlException, FieldMissingException, NoSuchRuleException, FieldValueException {
         Config.init(SysalertTest.class.getClassLoader().getResource("config.yml").getPath());
         Config config = Config.getConfig();
-        String rulePath = SysalertTest.class.getClassLoader().getResource("macro.yml").getPath();
+        String rulePath = SysalertTest.class.getClassLoader().getResource("blacklist_test.yml").getPath();
         RuleType rule = config.addRule(rulePath);
 
         rule.addAlerter(new ConsoleAlerter());
