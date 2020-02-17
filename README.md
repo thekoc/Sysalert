@@ -79,10 +79,10 @@ sequence:
     - term:
        	age: 20
   - filter:
-		- term:
-				age: 25
+    - term:
+        age: 25
 timewindow:
-	seconds: 10
+  seconds: 10
 index: students
 ```
 
@@ -92,14 +92,14 @@ Alert when specified events both occur in a timewindow.
 name: combination test
 type: combination
 combination:
-	- filter:
-		- term:
-				name: Harry Potter
-	- filter:
-		- term:
-				name: Albus Percival Wulfric Brian Dumbledore
+  - filter:
+    - term:
+        name: Harry Potter
+  - filter:
+    - term:
+        name: Albus Percival Wulfric Brian Dumbledore
 timewindow:
-	hours: 5
+  hours: 5
 index: Gryffindor
 ```
 
